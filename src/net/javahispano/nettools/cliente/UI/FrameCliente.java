@@ -913,7 +913,7 @@ public void StatusDesc(String desc)
     {
       ejecutoDeComandos.ListarProcesos();
     }
-    catch(Exception event)
+    catch(Exception event)        
     {
       JOptionPane.showConfirmDialog(null, "Lista no inicializada", "List Process",
                                     JOptionPane.CLOSED_OPTION,
