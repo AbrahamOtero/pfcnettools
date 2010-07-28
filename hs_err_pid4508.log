@@ -1,0 +1,183 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x6d9aa03c, pid=4508, tid=4124
+#
+# JRE version: 6.0_18-b07
+# Java VM: Java HotSpot(TM) Client VM (16.0-b13 mixed mode, sharing windows-x86 )
+# Problematic frame:
+# V  [jvm.dll+0xfa03c]
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x02ef8400):  JavaThread "Java2D Disposer" daemon [_thread_in_vm, id=4124, stack(0x03250000,0x032a0000)]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x00000000
+
+Registers:
+EAX=0x02ec3a50, EBX=0x00000000, ECX=0x00000000, EDX=0x0329f858
+ESP=0x0329f848, EBP=0x0329f924, ESI=0x02ef1b08, EDI=0x02ef8400
+EIP=0x6d9aa03c, EFLAGS=0x00010203
+
+Top of Stack: (sp=0x0329f848)
+0x0329f848:   02ef8400 02ef8510 02ece9c4 240507d0
+0x0329f858:   02ec3a50 0329f878 6d8b89fc 00000001
+0x0329f868:   240507d0 6d8b8a04 02ef8400 240507d0
+0x0329f878:   0329f89c 6d8b8a95 02ec3a5c 240507d0
+0x0329f888:   00000016 00000025 02ef8400 00000016
+0x0329f898:   02ec3a5c 0329f8c0 6da9184d 0329f8b8
+0x0329f8a8:   6da5d7f0 0000000e 000014dd 00000072
+0x0329f8b8:   00a55550 6d950192 000014dd 02ec3a4c 
+
+Instructions: (pc=0x6d9aa03c)
+0x6d9aa02c:   01 8b 4d b0 8b 55 a4 8b 45 f4 89 04 8a ff 45 b0
+0x6d9aa03c:   8b 03 8b 48 08 0f b7 51 2a 8b 40 0c 8b 4c 90 24 
+
+
+Stack: [0x03250000,0x032a0000],  sp=0x0329f848,  free space=13e0329f37ck
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0xfa03c]
+V  [jvm.dll+0xfce97]
+C  [awt.dll+0x6c50c]
+j  java.awt.Cursor.finalizeImpl(J)V+0
+j  java.awt.Cursor.access$000(J)V+1
+j  java.awt.Cursor$CursorDisposer.dispose()V+13
+j  sun.java2d.Disposer.run()V+26
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+V  [jvm.dll+0xf072c]
+V  [jvm.dll+0x17fd51]
+V  [jvm.dll+0xf08f7]
+V  [jvm.dll+0xf096d]
+V  [jvm.dll+0x11a4c0]
+V  [jvm.dll+0x1dd924]
+V  [jvm.dll+0x17f9cc]
+C  [msvcr71.dll+0x9565]
+C  [kernel32.dll+0xb729]
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  java.awt.Cursor.finalizeImpl(J)V+0
+j  java.awt.Cursor.access$000(J)V+1
+j  java.awt.Cursor$CursorDisposer.dispose()V+13
+j  sun.java2d.Disposer.run()V+26
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x03516800 JavaThread "Thread-3" [_thread_in_native, id=5588, stack(0x06550000,0x065a0000)]
+  0x02ef6800 JavaThread "TimerQueue" daemon [_thread_blocked, id=6060, stack(0x03b60000,0x03bb0000)]
+  0x00a56800 JavaThread "DestroyJavaVM" [_thread_blocked, id=2088, stack(0x00bf0000,0x00c40000)]
+  0x034f4400 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=4636, stack(0x037a0000,0x037f0000)]
+  0x02ef8c00 JavaThread "AWT-Shutdown" [_thread_blocked, id=5164, stack(0x032a0000,0x032f0000)]
+=>0x02ef8400 JavaThread "Java2D Disposer" daemon [_thread_in_vm, id=4124, stack(0x03250000,0x032a0000)]
+  0x02eb8400 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=2156, stack(0x03130000,0x03180000)]
+  0x02eb1c00 JavaThread "CompilerThread0" daemon [_thread_blocked, id=4956, stack(0x030e0000,0x03130000)]
+  0x02eb0400 JavaThread "Attach Listener" daemon [_thread_blocked, id=3780, stack(0x03090000,0x030e0000)]
+  0x02eaf000 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=5112, stack(0x03040000,0x03090000)]
+  0x02e70000 JavaThread "Finalizer" daemon [_thread_blocked, id=5308, stack(0x02ff0000,0x03040000)]
+  0x02e6b400 JavaThread "Reference Handler" daemon [_thread_blocked, id=2544, stack(0x02fa0000,0x02ff0000)]
+
+Other Threads:
+  0x02e6a000 VMThread [stack: 0x02f50000,0x02fa0000] [id=1392]
+  0x02ec2c00 WatcherThread [stack: 0x03180000,0x031d0000] [id=5376]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ def new generation   total 4928K, used 666K [0x24020000, 0x24570000, 0x29570000)
+  eden space 4416K,   5% used [0x24020000, 0x2405bc00, 0x24470000)
+  from space 512K,  83% used [0x24470000, 0x244dad20, 0x244f0000)
+  to   space 512K,   0% used [0x244f0000, 0x244f0000, 0x24570000)
+ tenured generation   total 10944K, used 2086K [0x29570000, 0x2a020000, 0x34020000)
+   the space 10944K,  19% used [0x29570000, 0x29779a28, 0x29779c00, 0x2a020000)
+ compacting perm gen  total 12288K, used 814K [0x34020000, 0x34c20000, 0x38020000)
+   the space 12288K,   6% used [0x34020000, 0x340ebba8, 0x340ebc00, 0x34c20000)
+    ro space 10240K,  54% used [0x38020000, 0x38598290, 0x38598400, 0x38a20000)
+    rw space 12288K,  55% used [0x38a20000, 0x390bd1c0, 0x390bd200, 0x39620000)
+
+Dynamic libraries:
+0x00400000 - 0x00424000 	C:\Archivos de programa\Java\jdk1.6.0_18\bin\java.exe
+0x7c910000 - 0x7c9c8000 	C:\WINDOWS\system32\ntdll.dll
+0x7c800000 - 0x7c903000 	C:\WINDOWS\system32\kernel32.dll
+0x77da0000 - 0x77e4c000 	C:\WINDOWS\system32\ADVAPI32.dll
+0x77e50000 - 0x77ee2000 	C:\WINDOWS\system32\RPCRT4.dll
+0x77fc0000 - 0x77fd1000 	C:\WINDOWS\system32\Secur32.dll
+0x50260000 - 0x502e5000 	C:\WINDOWS\SYSTEM32\PAVSHOOK.DLL
+0x7e390000 - 0x7e421000 	C:\WINDOWS\system32\USER32.dll
+0x77ef0000 - 0x77f39000 	C:\WINDOWS\system32\GDI32.dll
+0x76340000 - 0x7635d000 	C:\WINDOWS\system32\IMM32.DLL
+0x10000000 - 0x10017000 	C:\WINDOWS\system32\APSHook.dll
+0x50660000 - 0x5067d000 	C:\WINDOWS\system32\systools.dll
+0x770f0000 - 0x7717b000 	C:\WINDOWS\system32\oleaut32.dll
+0x77be0000 - 0x77c38000 	C:\WINDOWS\system32\msvcrt.dll
+0x774b0000 - 0x775ed000 	C:\WINDOWS\system32\ole32.dll
+0x7c340000 - 0x7c396000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\msvcr71.dll
+0x6d8b0000 - 0x6db47000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\client\jvm.dll
+0x76b00000 - 0x76b2e000 	C:\WINDOWS\system32\WINMM.dll
+0x6d860000 - 0x6d86c000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\verify.dll
+0x6d3e0000 - 0x6d3ff000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\java.dll
+0x6d340000 - 0x6d348000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\hpi.dll
+0x76bb0000 - 0x76bbb000 	C:\WINDOWS\system32\PSAPI.DLL
+0x6d8a0000 - 0x6d8af000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\zip.dll
+0x6d0b0000 - 0x6d1fa000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\awt.dll
+0x72f80000 - 0x72fa6000 	C:\WINDOWS\system32\WINSPOOL.DRV
+0x773a0000 - 0x774a3000 	C:\WINDOWS\WinSxS\x86_Microsoft.Windows.Common-Controls_6595b64144ccf1df_6.0.2600.5512_x-ww_35d4ce83\COMCTL32.dll
+0x77f40000 - 0x77fb6000 	C:\WINDOWS\system32\SHLWAPI.dll
+0x5b150000 - 0x5b188000 	C:\WINDOWS\system32\uxtheme.dll
+0x0f000000 - 0x0f016000 	C:\Archivos de programa\Panda Security\Panda Internet Security 2010\pavoepl.dll
+0x77bd0000 - 0x77bd8000 	C:\WINDOWS\system32\VERSION.dll
+0x7c3a0000 - 0x7c41b000 	C:\WINDOWS\system32\MSVCP71.dll
+0x746b0000 - 0x746fc000 	C:\WINDOWS\system32\MSCTF.dll
+0x75160000 - 0x7518e000 	C:\WINDOWS\system32\msctfime.ime
+0x7e6a0000 - 0x7eec1000 	C:\WINDOWS\system32\shell32.dll
+0x6d2e0000 - 0x6d334000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\fontmanager.dll
+0x6d6c0000 - 0x6d6d3000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\net.dll
+0x71a30000 - 0x71a47000 	C:\WINDOWS\system32\WS2_32.dll
+0x71a20000 - 0x71a28000 	C:\WINDOWS\system32\WS2HELP.dll
+0x50200000 - 0x50219000 	C:\WINDOWS\SYSTEM32\PavLspHook.DLL
+0x41b60000 - 0x41b84000 	C:\Archivos de programa\Panda Security\Panda Internet Security 2010\PavTrc.dll
+0x6d6e0000 - 0x6d6e9000 	C:\Archivos de programa\Java\jdk1.6.0_18\jre\bin\nio.dll
+0x719d0000 - 0x71a10000 	C:\WINDOWS\System32\mswsock.dll
+0x76ee0000 - 0x76f07000 	C:\WINDOWS\system32\DNSAPI.dll
+0x76f70000 - 0x76f78000 	C:\WINDOWS\System32\winrnr.dll
+0x76f20000 - 0x76f4d000 	C:\WINDOWS\system32\WLDAP32.dll
+0x76f80000 - 0x76f86000 	C:\WINDOWS\system32\rasadhlp.dll
+0x03890000 - 0x038a3000 	C:\WINDOWS\system32\btmmhook.dll
+0x03bb0000 - 0x03bbc000 	C:\Archivos de programa\WIDCOMM\Bluetooth Software\btkeyind.dll
+0x66740000 - 0x66799000 	C:\WINDOWS\system32\hnetcfg.dll
+0x71a10000 - 0x71a18000 	C:\WINDOWS\System32\wshtcpip.dll
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 
+java_command: net.javahispano.nettools.cliente.UI.FrameCliente
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=C:\Archivos de programa\Archivos comunes\Microsoft Shared\Windows Live;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Archivos de programa\ATI Technologies\Fire GL 3D Studio Max;c:\Archivos de programa\ATI Technologies\ATI.ACE\Core-Static;C:\Archivos de programa\ActivIdentity\ActivClient\;C:\Archivos de programa\Hewlett-Packard\IAM\bin;C:\WINDOWS\system32\WindowsPowerShell\v1.0;C:\Archivos de programa\Panda Security\Panda Internet Security 2010\;C:\Archivos de programa\Archivos comunes\Microsoft Shared\Windows Live
+USERNAME=Usuario
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=x86 Family 6 Model 23 Stepping 10, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows XP Build 2600 Service Pack 3
+
+CPU:total 2 (2 cores per cpu, 1 threads per core) family 6 model 23 stepping 10, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1
+
+Memory: 4k page, physical 2091204k(790932k free), swap 4028504k(2540152k free)
+
+vm_info: Java HotSpot(TM) Client VM (16.0-b13) for windows-x86 JRE (1.6.0_18-b07), built on Dec 17 2009 13:35:55 by "java_re" with MS VC++ 7.1 (VS2003)
+
+time: Mon Jul 12 21:54:40 2010
+elapsed time: 70 seconds
+

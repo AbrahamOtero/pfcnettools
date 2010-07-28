@@ -1,0 +1,9 @@
+[PropertyInfo]
+cliente,Socket,false,false, , ,false,<default>
+conexion,Conexiones,false,false, , ,false,<default>
+host,String,false,false, , ,false,<default>
+[IconNames]
+
+
+
+
