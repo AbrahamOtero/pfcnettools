@@ -464,6 +464,7 @@ public  JTree arbolprocesos;
     FrameCliente frameCliente = new FrameCliente();
     frameCliente.setSize(600, 400);
     frameCliente.setVisible(true);
+    frameCliente.setLocationRelativeTo(null);
   }
 
 
@@ -1387,7 +1388,18 @@ public void  Listar(String procesos){
     int inicio=0,fin=0;
 String separador = ">#";
 JDialog  panelprocesos;
-JPanel panel3=new JPanel ();
+//Le pido al Frame su objeto contenedor
+//Container contentpane = getContentPane();
+//Creo un objeto de tipo JPanel
+//JPanel panel = new JPanel();
+//Añado el panel en el objeto contenedor del frame
+
+
+
+
+
+
+//JPanel panel3=new JPanel ();
     DefaultListModel modelo = new DefaultListModel();
     DefaultTableModel modelo1 = new DefaultTableModel();
 
@@ -1433,7 +1445,7 @@ fin=procesos.indexOf(separador,inicio);
     fin=procesos.indexOf(separador,inicio);
     System.out.println("inicio"+inicio);
 
-while(filas<total-3){
+while(filas<total-20){//total-4
      fin=procesos.indexOf(separador,inicio);
      //System.out.println("inicio"+inicio+ "FIN"+fin);
     aux=procesos.substring(inicio, fin);
@@ -1453,9 +1465,9 @@ while(filas<total-3){
          {
 
              System.out.println("Campo4"+campo1);
-             data[filas][columnas]=VueltaCadena(campo1);
+            data[filas][columnas]=VueltaCadena(campo1);
            campo1=" ";
-  //       modelo1.setValueAt (filas, columnas,'');
+  //      modelo1.setValueAt (filas, columnas,'');
          columnas--;
           estado=1;
          }
@@ -1508,13 +1520,14 @@ while(filas<total-3){
 
        }
        else{
+
         campo1+=aux.charAt(j);
        if (j==1){
           
            campo1+=aux.charAt(j-1);
            System.out.println("Acaba volvemos estado inicial"+campo1);
-           data[filas][columnas]=VueltaCadena(campo1);
-           campo1="";
+          data[filas][columnas]=VueltaCadena(campo1);
+           campo1=" ";
         estado=0;
 
             }
@@ -1567,8 +1580,31 @@ while(filas<total-3){
    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);//.HORIZONTAL_SCROLLBAR_ALWAYS);
     */   // getContentPane().add(scrlFiles, BorderLayout.CENTER);
 //         panel3.add(scrollPane, BorderLayout.SOUTH);
- panel3.add(scrollPane);
+
+        JPanel panel3=new JPanel ();
+
+        Container container = this.getContentPane();
+        panel3.setLayout(new BorderLayout(1,1));
+//((BorderLayout) container.getLayout()).setHgap(2);
+//((BorderLayout) container.getLayout()).setVgap(2);
+//panel3.setLayout(borderLayout);
+
+
+//container.add(button, borderConsts[i]);
+panel3.add(scrollPane,BorderLayout.NORTH);
+
+
+
+
+
+       // panel3.add(scrollPane);
+panel3.add(scrollPane,BorderLayout.NORTH);
+//container.add(scrollPane,BorderLayout.NORTH);
         JButton boton = new JButton("Terminar proceso");
+panel3.add(boton,BorderLayout.SOUTH);
+   //     container.add(boton,BorderLayout.EAST);
+container.add(panel3);
+ //panel3.add(container);
 
          boton.addActionListener (
 
@@ -1675,12 +1711,18 @@ System.out.print("Los numeros son => "+numero);
 
 
       panel3.add(boton);
-
-panelprocesos = new JDialog();
+//((Frame) ventanaPadre
+panelprocesos = new JDialog(this);
+panelprocesos.setModal(true);
 panelprocesos.setTitle("Lista de procesos");
 Container contentPane = panelprocesos.getContentPane();
 contentPane.add(panel3, BorderLayout.CENTER);
+panelprocesos.pack();
 panelprocesos.setSize(new Dimension(600, 400));
+panelprocesos.setLocationRelativeTo(this);
+
+//frameCliente.setLocationRelativeTo(null)
+
 panelprocesos.show();
 
 
