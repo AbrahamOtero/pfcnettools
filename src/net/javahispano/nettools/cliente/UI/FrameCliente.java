@@ -1445,6 +1445,7 @@ fin=procesos.indexOf(separador,inicio);
     fin=procesos.indexOf(separador,inicio);
     System.out.println("inicio"+inicio);
 
+    System.out.println("El total sssss"+total);
 while(filas<total-20){//total-4
      fin=procesos.indexOf(separador,inicio);
      //System.out.println("inicio"+inicio+ "FIN"+fin);
