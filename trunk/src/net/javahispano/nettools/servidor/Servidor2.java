@@ -155,24 +155,23 @@ class GestorPeticion
               System.out.println("Orden matar proceso"+recibimos.orden2);
               String separador = ">#";
               //    Runtime.getRuntime().exec("cmd.exe /C pskill.exe "+recibimos.orden2);
-
-
-
               int num=NumeroDeSubdirectorios(recibimos.orden2,separador);
               int cont=0,inicio=0,fin=0;
-
+              String resultado="";
               while(num>cont){
 
              fin=recibimos.orden2.indexOf(separador,inicio);
              aux=recibimos.orden2.substring(inicio, fin);
-              System.out.println("Pid a matar "+ aux);
+              System.out.println("Pid a matar "+ aux+"\n");
              //hierarchy[cont]=(aux);
               Runtime.getRuntime().exec("cmd.exe /C  taskkill /F /PID "+aux);
+              resultado+="Proceso "+aux +"cerrado con exito"+"\n";
                inicio=fin+2;
          // Runtime.getRuntime().exec("cmd.exe /C TASKKILL.exe/ "+recibimos.orden2);
               cont++;
               }
-              mandamos=new Objeto("\nproceso "+recibimos.orden2+" cerrado con exito",null,null,0,0,null);
+              System.out.println("RRRRRRRRRRR"+resultado);
+              mandamos=new Objeto("El resultado de matar procesos :\n"+resultado+"",null,null,0,0,null);
           Flujo_Salida.writeObject(mandamos);
            }
         catch (Exception e) {

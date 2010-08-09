@@ -1387,7 +1387,8 @@ try {
 public void  Listar(String procesos){
     int inicio=0,fin=0;
 String separador=">#";
-JDialog  panelprocesos;
+//final JDialog  panelprocesos = null;
+final JDialog panelprocesos = new JDialog(this);
 //Le pido al Frame su objeto contenedor
 //Container contentpane = getContentPane();
 //Creo un objeto de tipo JPanel
@@ -1519,10 +1520,6 @@ while(filas<total-3){//total-4
           }
 
             anterior=aux.charAt(j);
-         //   siguiente=aux.charAt(j+1);
-
-
-
        }
        if(estado==2)//ultimo campo
        {
@@ -1556,7 +1553,7 @@ while(filas<total-3){//total-4
 
 
 //    final JTable table = new JTable(data, columnNames);
-    JTable table = new JTable(data, columnNames);
+    final JTable table = new JTable(data, columnNames);
     table.setAutoCreateRowSorter(true);
     table.setPreferredScrollableViewportSize(new Dimension(500,300));
 
@@ -1612,10 +1609,46 @@ panel3.add(scrollPane,BorderLayout.NORTH);
 panel3.add(scrollPane,BorderLayout.NORTH);
 //container.add(scrollPane,BorderLayout.NORTH);
         JButton boton = new JButton("Terminar proceso");
+        JButton boton2 = new JButton("Refrescar proceso");
+        JButton boton3 = new JButton("Cancelar");
+
+panel3.add(boton3,BorderLayout.WEST);
+panel3.add(boton2,BorderLayout.EAST);
 panel3.add(boton,BorderLayout.SOUTH);
    //     container.add(boton,BorderLayout.EAST);
 container.add(panel3);
  //panel3.add(container);
+
+  boton2.addActionListener (
+
+         new ActionListener () {
+
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Actualizando procesos");
+               
+     try
+     {
+
+panelprocesos.dispose();
+      // panelprocesos..repaint();//.dispose();
+      ejecutoDeComandos.ListarProcesos();
+          //ejecutoDeComandos.KillProcesos(allpid.toString());
+     }
+    catch(Exception event)
+    {
+      JOptionPane.showConfirmDialog(null, "El Proceso no se puede matar", "Kill Process",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+              };
+
+            }
+         } // clase interna anónima
+         //la clase interna anónima
+      ); // Finalizar llamada para addActionListener
+
+
+
 
          boton.addActionListener (
 
@@ -1624,84 +1657,20 @@ container.add(panel3);
             public void actionPerformed(ActionEvent e) {
             int contador=0;//    throw new UnsupportedOperationException("Not supported yet.");
             
-                Object[] seleccionado=lista.getSelectedValues();
-                //for (Object [] seleccionado : []seleccionado){
-             System.out.println("Obtenermos los elementos seleccionados"+seleccionado.length);
-             String  allpid="";
-             int inicio=0,fin=0,ini=0;
-             String cadena;
-             String numero ="";
-             String separador = ">#";
-             while(contador<seleccionado.length){
-                //seleccionado[contador]=(aux);
-             cadena=seleccionado[contador].toString();
-             //System.out.println(cadena.replaceAll("\\t","@"));
-          //--     cadena=cadena.replaceAll("\\s","");
-//               cadena= cadena.split("\\s+);
-           char anterior =' ',siguiente=' ';
-                 System.out.println(cadena);
-     int estado=0;
-      for(int i=0; i <cadena.length()/2; i++)
-       { if (Character.isDigit(cadena.charAt(i)))
-         {            
-            if (siguiente==' '){
-                 System.out.println("Acaba el pid");
-                 System.out.println("Comienza"+cadena.charAt(i));        
-                     if(estado==1){
-                     estado=2;
-                     numero=numero+cadena.charAt(i);
-                     }
-                    }
-                if (estado==1)
-                {
-                numero=numero+cadena.charAt(i);
-                }
+                //Object[] seleccionado=lista.getSelectedValues();
 
-                if (anterior==' ')
-                 {
-                     System.out.println("Comienza pid ");
-                     System.out.println("Comienza"+cadena.charAt(i));
-                     numero=numero+cadena.charAt(i);
-                     if(estado!=2)
-                     estado=1;
-                 }
+                // Object [] seleccionado=(Object[])(Object) table.getSelectedRows();
 
-         }
-                   // else
-             anterior=cadena.charAt(i);
-             siguiente=cadena.charAt(i+2);
-        }
-                 System.out.println("+++++++++++++++++++++++++++++++++++++++++++");
-System.out.print("Los numeros son => "+numero);
-                allpid+=numero+separador;
-                numero="";
-                 System.out.println("Anterio "+anterior +"Siguiente "+siguiente);
-        System.out.println("------------"); System.out.println ("------------");
-  
-        
-        /*            for (int x=0; x < cadena.length(); x++) {
-                if (cadena.charAt(x) != ' ')
-                cuenta += cuentae.charAt(x);
-                    }*/
-
-
-
-               //cadena=cadena.trim();
-             /*  System.out.println(cadena.trim());
-             System.out.println("AAAUUXXX"+cadena);
-               ini=cadena.indexOf("@",inicio);
-               fin=cadena.indexOf("\\s",ini);
-     //System.out.println("inicio"+inicio+ "FIN"+fin);
-               // aux=aux.substring(inicio, fin);
-                 System.out.println("inicio"+ini+ "fin"+fin);
-                System.out.println("FFFFFFFFFFfff"+cadena);
-
-                    System.out.println("proceso seleccionado : "+seleccionado[contador]);
-              */
-
-              contador=contador+1;
-              }
-
+            int [] seleccionado=table.getSelectedRows();
+            int cont=0;
+            String  allpid="";
+            String separador = ">#";
+            while(seleccionado.length-1>=cont)
+            {
+                System.out.println("Seleccionado " + table.getValueAt(seleccionado[cont],1).toString());
+               allpid+=table.getValueAt(seleccionado[cont],1).toString()+separador;
+                cont++;
+            }
       try
      {
       ejecutoDeComandos.KillProcesos(allpid.toString());
@@ -1723,7 +1692,7 @@ System.out.print("Los numeros son => "+numero);
 
       panel3.add(boton);
 //((Frame) ventanaPadre
-panelprocesos = new JDialog(this);
+//panelprocesos = new JDialog(this);
 panelprocesos.setModal(true);
 panelprocesos.setTitle("Lista de procesos");
 Container contentPane = panelprocesos.getContentPane();
@@ -1731,6 +1700,7 @@ contentPane.add(panel3, BorderLayout.CENTER);
 panelprocesos.pack();
 panelprocesos.setSize(new Dimension(600, 400));
 panelprocesos.setLocationRelativeTo(this);
+
 
 //frameCliente.setLocationRelativeTo(null)
 
