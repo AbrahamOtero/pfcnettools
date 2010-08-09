@@ -75,6 +75,7 @@ public class Lector2 implements Runnable {
             }
              if (Mensaje.peticion==3){
                  System.out.println("Preparado para listar los procesoos");
+                 System.out.println(Mensaje.orden);
                 cliente.mensageListarProcesos(Mensaje.orden);
                  Mensaje.orden=Mensaje.orden.replaceAll(">#","\n");
 

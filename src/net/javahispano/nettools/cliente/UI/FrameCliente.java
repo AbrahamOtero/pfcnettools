@@ -1386,7 +1386,7 @@ try {
 
 public void  Listar(String procesos){
     int inicio=0,fin=0;
-String separador = ">#";
+String separador=">#";
 JDialog  panelprocesos;
 //Le pido al Frame su objeto contenedor
 //Container contentpane = getContentPane();
@@ -1408,9 +1408,9 @@ JDialog  panelprocesos;
 
  String aux;
     //System.out.println("procesos.length()"+procesos.length());
-    //int total=NumeroDeSubdirectorios(procesos,separador);
+    int total=NumeroDeSubdirectorios(procesos,separador);
     //System.out.println("total"+total);
-    int total=97;
+    //int total=97;
 
             // while(inicio<procesos.length()){
             int cont=0;
@@ -1421,7 +1421,7 @@ JDialog  panelprocesos;
     String[] columnNames = {"Nombre de imagen", "Pid", "Nombre de sesion",
                                    "CPU", "Uso de memoria"};
 
-    Object[][] data=new Object[total][5];
+    Object[][] data=new Object[total-3][5];
     /*
    Object[][] data = {
        {"Mary", "Campione", "Esquiar", new Integer(5), new Boolean(false)},
@@ -1437,16 +1437,26 @@ int blancos=0;
 int i;
 int contador=0;
     System.out.println(procesos);
-fin=procesos.indexOf(separador,inicio);
+/*fin=procesos.indexOf(separador,inicio);
 
     inicio=procesos.indexOf(separador,100);
     fin=procesos.indexOf(separador,inicio);
     inicio=procesos.indexOf(separador,fin);
-    fin=procesos.indexOf(separador,inicio);
-    System.out.println("inicio"+inicio);
+    fin=procesos.indexOf(separador,inicio);*/
+
+    fin=procesos.indexOf(separador,0);
+
+    System.out.println("comienzo encontrado1  "+fin);
+    inicio=procesos.indexOf(separador,fin+2);
+    System.out.println("comienzo encontrado2  "+inicio);
+    fin=procesos.indexOf(separador,inicio+2);
+    System.out.println("comienzo encontrado3  "+fin);
+   //inicio=procesos.indexOf(separador,fin+2);
+    inicio=fin+2;
+    //System.out.println("comienzo encontrado4  "+inicio);
 
     System.out.println("El total sssss"+total);
-while(filas<total-20){//total-4
+while(filas<total-3){//total-4
      fin=procesos.indexOf(separador,inicio);
      //System.out.println("inicio"+inicio+ "FIN"+fin);
     aux=procesos.substring(inicio, fin);

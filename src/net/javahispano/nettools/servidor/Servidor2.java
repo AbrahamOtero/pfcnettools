@@ -104,11 +104,12 @@ class GestorPeticion
            String buffer="";
           String tmp;
         while((tmp=entrada.readLine())!=null){
-         buffer += separador + tmp;
+         //buffer += separador + tmp;
+        buffer +=tmp+separador;
+
         System.out.println(tmp);
-
         }
-
+         System.out.println(buffer);
         entrada.close();
         mandamos=new Objeto(3,buffer,null,null,0,0,null);
           Flujo_Salida.writeObject(mandamos);
@@ -171,7 +172,7 @@ class GestorPeticion
          // Runtime.getRuntime().exec("cmd.exe /C TASKKILL.exe/ "+recibimos.orden2);
               cont++;
               }
-              mandamos=new Objeto("\nproceso "+recibimos.orden2+" cerrado con �xito",null,null,0,0,null);
+              mandamos=new Objeto("\nproceso "+recibimos.orden2+" cerrado con exito",null,null,0,0,null);
           Flujo_Salida.writeObject(mandamos);
            }
         catch (Exception e) {
