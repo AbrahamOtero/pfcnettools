@@ -116,6 +116,7 @@ public class Lector2 implements Runnable {
        //   Frame2 nuevo = new Frame2(Mensaje.root);
    //       nuevo.show();
         }
+         
         cliente.mensageInformacion(realizado + pantalla);
       }
 
