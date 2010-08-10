@@ -245,7 +245,7 @@ public  JTree arbolprocesos;
     conexionMenu.setIcon(conexion
                          );
     setTitle("NetTools 0.7 Beta Administraci�n Remota"); //T�tulo del frame
-    conexionMenu.setText("Conexi�n");
+    conexionMenu.setText("Conexión");
     jMenu2.setActionCommand("Servicios");
     jMenu2.setIcon(services);
     jMenu2.setMargin(new Insets(2, 2, 2, 2));
@@ -299,7 +299,7 @@ public  JTree arbolprocesos;
                                      FrameCliente_stopTelnetMenu_actionAdapter(this));
     jMenu5.setIcon(admin);
     jMenu5.setMargin(new Insets(2, 2, 2, 2));
-    jMenu5.setText("Administraci�n");
+    jMenu5.setText("Administración");
     crearUsuarioMenu.setIcon(creaUsuarioIcono);
     crearUsuarioMenu.setMargin(new Insets(2, 2, 2, 2));
     crearUsuarioMenu.setText("Crear Usuario");
@@ -355,7 +355,7 @@ public  JTree arbolprocesos;
     acercaDeNettolsMenu.addActionListener(new
         FrameCliente_acercaDeNettolsMenu_actionAdapter(this));
     paginaPrincipalMenu.setIcon(principalIcono);
-    paginaPrincipalMenu.setText("P�gina principal de NetTools");
+    paginaPrincipalMenu.setText("Página principal de NetTools");
     paginaPrincipalMenu.addActionListener(new
         FrameCliente_paginaPrincipalMenu_actionAdapter(this));
     conectarRadioButton.setAccelerator(javax.swing.KeyStroke.getKeyStroke('O',
@@ -632,7 +632,7 @@ public void StatusDesc(String desc)
   void registroRemotoMenu_actionPerformed(ActionEvent e) {
 
     int respuesta = JOptionPane.showConfirmDialog(null,
-                                                  "�Desea acceder al registro remoto?",
+                                                  "Desea acceder al registro remoto?",
                                                   "telnet",
                                                   JOptionPane.
                                                   YES_NO_CANCEL_OPTION,
@@ -1379,9 +1379,6 @@ try {
     public void mensageListarProcesos(String Listaprocesos) {
      // Listaprocesos=Listaprocesos.replaceAll(">#","\n");
         Listar(Listaprocesos);
-
-
-
     }
 
 public void  Listar(String procesos){
@@ -1619,24 +1616,21 @@ panel3.add(boton,BorderLayout.SOUTH);
 container.add(panel3);
  //panel3.add(container);
 
-  boton2.addActionListener (
+ boton3.addActionListener (
 
          new ActionListener () {
 
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Actualizando procesos");
-               
+                System.out.println("Cerrar Ventana");
+
      try
      {
 
-panelprocesos.dispose();
-      // panelprocesos..repaint();//.dispose();
-      ejecutoDeComandos.ListarProcesos();
-          //ejecutoDeComandos.KillProcesos(allpid.toString());
+    panelprocesos.dispose();
      }
     catch(Exception event)
     {
-      JOptionPane.showConfirmDialog(null, "El Proceso no se puede matar", "Kill Process",
+      JOptionPane.showConfirmDialog(null, "La venta de procesos no se puede cerrar", "Close Windows",
                                     JOptionPane.CLOSED_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE);
 
@@ -1649,6 +1643,34 @@ panelprocesos.dispose();
 
 
 
+
+
+
+  boton2.addActionListener (
+
+         new ActionListener () {
+
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Actualizando procesos");
+               
+     try
+     {
+
+        panelprocesos.dispose();
+        ejecutoDeComandos.ListarProcesos();
+     }
+    catch(Exception event)
+    {
+      JOptionPane.showConfirmDialog(null, "Error,no se pudo Listar procesos", "error list process",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+              };
+
+            }
+         } // clase interna anónima
+         //la clase interna anónima
+      ); // Finalizar llamada para addActionListener
 
          boton.addActionListener (
 
@@ -1665,6 +1687,13 @@ panelprocesos.dispose();
             int cont=0;
             String  allpid="";
             String separador = ">#";
+         if (table.getSelectedRowCount()==0){
+                    System.out.println("Debe seleccionar algun proceso");
+         JOptionPane.showConfirmDialog(null, "Debe seleccionar el proceso que desea Terminar", "Kill Process",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+         
+         }
             while(seleccionado.length-1>=cont)
             {
                 System.out.println("Seleccionado " + table.getValueAt(seleccionado[cont],1).toString());
@@ -1705,10 +1734,6 @@ panelprocesos.setLocationRelativeTo(this);
 //frameCliente.setLocationRelativeTo(null)
 
 panelprocesos.show();
-
-
-
-
         // lstFiles.setCellRenderer(new FileRenderer(ICON_SIZE));
 
 
