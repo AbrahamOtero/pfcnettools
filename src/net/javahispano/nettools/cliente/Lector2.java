@@ -30,7 +30,7 @@ public class Lector2 implements Runnable {
 
   public void run() {
     String pantalla = "";
-    String realizado = "                                                                                       Administraci�n remota Windows 2000,NT,XP\n";
+    String realizado = "                                                                                       Administración remota Windows 2000,NT,XP\n";
     cliente.mensageInformacion(realizado);
     while (cliente.isConnected()) {
       Objeto Mensaje = conexion.RecibeMensaje();
@@ -41,7 +41,7 @@ public class Lector2 implements Runnable {
              if (Mensaje.peticion==1){
                  System.out.println("Todos las unidades de disco"+Mensaje.orden);
                  cliente.mensageInformacionArbol(Mensaje.orden);
-
+                 Mensaje.orden=Mensaje.orden.replaceAll(">#","\n");
        /* JTree tree = new JTree(Mensaje.root);
         JFrame v = new JFrame();
         JScrollPane scroll = new JScrollPane(tree);
