@@ -53,7 +53,7 @@ public  JTree arbolprocesos;
         private JList lstFiles;
 
 
-
+TreeExpansionEvent au;
   TreeSelectionEvent auxx;
 
   JLabel statusBar = new JLabel();
@@ -715,14 +715,13 @@ public void StatusDesc(String desc)
         } catch (Exception ex) {
             Logger.getLogger(FrameCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
-    Object objeto = JOptionPane.showInputDialog(null, "�Directorio a listar?",
+    Object objeto = JOptionPane.showInputDialog(null, "Directorio a listar?",
                                                 "directorio",
                                                 JOptionPane.DEFAULT_OPTION,
                                                 iconoCarpeta, null, null);
 
     try {
 
-    // ejecutoDeComandos.listarUnidades();
       ejecutoDeComandos.listarDirectorio(objeto.toString());
     }
     catch (NuestraExeption ex) {
@@ -741,7 +740,7 @@ public void StatusDesc(String desc)
       ex.printStackTrace();
     }
     JOptionPane.showConfirmDialog(null, "Desconectados del Servidor",
-                                  "desconexi�n", JOptionPane.CLOSED_OPTION,
+                                  "desconexión", JOptionPane.CLOSED_OPTION,
                                   JOptionPane.INFORMATION_MESSAGE);
     conectarRadioButton.setEnabled(true);
   }
@@ -964,6 +963,8 @@ public void StatusDesc(String desc)
       int inicio = 0,fin=0,cont=0;
         String separador = ">#";
         String aux=null;
+        String esdirectorio="";
+         String h="";
         //int campos=NumeroDeSubdirectorios(Datosarbol,separador);
        // Object[] hierarchy=new Object[campos];
 System.out.println("Dentro del Expandir"+Datosarbol);
@@ -972,7 +973,7 @@ System.out.println("Dentro del Expandir"+Datosarbol);
        DefaultMutableTreeNode node =null;
     //  new DefaultMutableTreeNode(hierarchy[0]);
 DefaultMutableTreeNode hijo=null;
-
+DefaultMutableTreeNode nieto=null;
 
      int startRow = 0;
 
@@ -981,17 +982,43 @@ DefaultMutableTreeNode hijo=null;
       System.out.println("AUXXXXXXXXX "+aux);
      //    int startRow=level;
 String prefix = nodeArbol.toString();
+String prefix2 ="";
     //  String prefix ="/";
      TreePath path = treeDir.getNextMatch(prefix, startRow, Position.Bias.Forward);
-      // TreePath path=(auxx.getPath());
-      MutableTreeNode node2 = (MutableTreeNode)path.getLastPathComponent();
+      System.out.println("PATTTTTHHH"+path);
+     // TreePath path=(auxx.getPath());
+      DefaultMutableTreeNode node2 = (DefaultMutableTreeNode)(MutableTreeNode) path.getLastPathComponent();
+      //MutableTreeNode node2 = (MutableTreeNode)path.getLastPathComponent();
      DefaultTreeModel model = (DefaultTreeModel) treeDir.getModel();
-inicio=fin+2;
+DefaultTreeModel model2 ;
+MutableTreeNode node3;
+     inicio=fin+2;
+
+    // model.removeNodeFromParent(node2);
+     // node2.remove(nieto);
+//     System.out.println("NOOOOOOOOODEEE"+node2);
+ //    node2.removeAllChildren();
+     // node2.remove(0);
+
+      //top.removeAllChildren();
+    //  model.reload();
+
+
+
      while(inicio<Datosarbol.length()){
      fin=Datosarbol.indexOf(separador,inicio);
-    aux=Datosarbol.substring(inicio, fin);
-
+    aux=Datosarbol.substring(inicio, fin-1);
+    //prefix2=nodeArbol.toString()+aux;
+     //    System.out.println("PPPPPPPPPPPPPPPPPPPPPP"+prefix2);
+     esdirectorio=Datosarbol.substring(fin-1,fin);
+      //System.out.println("esdirectorio######"+esdirectorio);
      hijo = new DefaultMutableTreeNode(aux);
+     //model.insertNodeInto( (DefaultMutableTreeNode) hijo, (DefaultMutableTreeNode) node2, node2.getChildCount());
+     if (esdirectorio.endsWith("1")){
+        //     System.out.println("creo un hijo");
+             nieto = new DefaultMutableTreeNode(h);
+             hijo.add(nieto);
+         }
      model.insertNodeInto( (DefaultMutableTreeNode) hijo, (DefaultMutableTreeNode) node2, node2.getChildCount());
  //   hierarchy[cont]=(aux);
  //  System.out.println(hierarchy[cont] + "bucle");
@@ -1115,7 +1142,8 @@ public void NuevaPesta(String Datosarbol) throws Exception{
        render.setClosedIcon(new ImageIcon("C:/Documents and Settings/Usuario/Mis documentos/NetBeansProjects/proye/src/net/javahispano/nettools/cliente/UI/iconos/accion.gif"));
         setLayout(new BorderLayout());
 */
-        this.setLayout(new BorderLayout());
+        //this.setLayout(new BorderLayout());
+        panel2.setLayout(new BorderLayout());
 
         /** Que tan grandes son los iconos que voy a mostrar en la lista */
         final int ICON_SIZE = 32;
@@ -1188,7 +1216,7 @@ public void NuevaPesta(String Datosarbol) throws Exception{
          * preferentes, que cuando utilizamos el metodo pack se utilizan para
          * generar la interfaz.
          */
-        treeDir.setPreferredSize(new Dimension(500, 500));
+        //treeDir.setPreferredSize(new Dimension(500, 500));
         /**
          * El JTree tiene dos eventos importantisimos, cuando seleccionan algo
          * utilizamos el TreeSelectionListener para manejar el evento
@@ -1207,12 +1235,12 @@ public void NuevaPesta(String Datosarbol) throws Exception{
         scrlDir = new JScrollPane(treeDir);
         scrlDir.setVerticalScrollBarPolicy(
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scrlDir.setPreferredSize (new Dimension(250,240));
+        scrlDir.setPreferredSize (new Dimension(260,240));
      //   getContentPane().add(scrlDir, BorderLayout.WEST);
           //panel2.add(scrlDir);//.add(scrlDir, BorderLayout.WEST);
 
        //panel2.getViewport().add(scrlDir,null);
-       panel2.add(scrlDir,null);
+       panel2.add(scrlDir,BorderLayout.WEST);
           mdlFiles = new DefaultListModel();
         lstFiles = new JList(mdlFiles);
 
@@ -1226,7 +1254,7 @@ public void NuevaPesta(String Datosarbol) throws Exception{
         scrlFiles.setVerticalScrollBarPolicy(
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
        // getContentPane().add(scrlFiles, BorderLayout.CENTER);
-         panel2.add(scrlFiles, BorderLayout.CENTER);
+ //---        panel2.add(scrlFiles, BorderLayout.CENTER);
      //   panel2.pack();
      //   panel2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       //  panel2.setTitle("Arbol");
@@ -1306,7 +1334,39 @@ return contador;
 
 
   public void treeExpanded(TreeExpansionEvent event) {
-  /*      TreePath path = event.getPath();
+      System.out.println("ADDDADADADADADDADADADADADADDDADDADADADDDADADADDADD");
+
+         String rutacompleta="";
+         TreePath path = event.getPath();
+	 Object [] nodos3 = path.getPath();
+         System.out.print("Path seleccionado: ");
+         int cont=0;
+		for (Object nodo3: nodos3){
+		  if (cont>1)
+                      rutacompleta+=nodo3.toString()+"/";
+                  else{
+                    rutacompleta+=nodo3.toString();
+                    cont++;
+                    }
+
+		System.out.println("++++++++++++"+rutacompleta);
+                }
+            System.out.println("La ruta completa  a listar es: "+rutacompleta);
+           DefaultMutableTreeNode node =
+                (DefaultMutableTreeNode) treeDir.getLastSelectedPathComponent();
+        au=event;
+        nodeArbol=node;
+        try {
+            ejecutoDeComandos.listarDirectorio(rutacompleta);
+        } catch (NuestraExeption ex) {
+            Logger.getLogger(FrameCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+
+
+
+      /*      TreePath path = event.getPath();
         DefaultMutableTreeNode node =
                 (DefaultMutableTreeNode) path.getLastPathComponent();
 
@@ -1360,7 +1420,7 @@ try {
                     cont++;
                     }
                      
-		System.out.println("++++++++++++"+rutacompleta);
+		System.out.println("+++Cmbiaaaa+++++"+rutacompleta);
                 }
             System.out.println("La ruta completa  a listar es: "+rutacompleta);
            DefaultMutableTreeNode node =

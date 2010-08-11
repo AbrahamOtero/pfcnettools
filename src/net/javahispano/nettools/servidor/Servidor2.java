@@ -334,10 +334,23 @@ class GestorPeticion
             String s[] = dir.list();
             String directorio = "";
             directorio+= recibimos.orden2+separador;
+            File fRuta;
             if (dir.exists() == true) {
               for (int i = 1; i < s.length; i++) {
-                directorio +=s[i]+separador;
-                System.out.println("SUBDIRECTORIOS a listar"+s[i]);
+                //directorio +=s[i]+separador;
+                  directorio +=s[i];
+                //File fRuta = new File("c:\\prueba");
+              System.out.println(recibimos.orden2+s[i]);
+                 fRuta = new File(recibimos.orden2+s[i]);
+                if (fRuta.isDirectory()){
+                   System.out.println("Es un directorio");
+                    directorio+="1"+separador;
+                }
+                else{
+                   System.out.println(" NO es un directorio");
+                    directorio+="2"+separador;
+                }
+                System.out.println("SUBDIRECTORIOS a listar "+s[i]);
               }
 
             }
