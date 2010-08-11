@@ -22,9 +22,9 @@ public class EjecutaComandos {
   private Informable informable;
 
   private String comando_regedit = (
-      "\nDebes quitar la protecci�n NTLM del registro del sistema.");
+      "\nDebes quitar la protección NTLM del registro del sistema.");
   private String comando_regedit2 = (
-      "\nEjecuta el registro remoto. Con�ctate a la m�quina y ve a ");
+      "\nEjecuta el registro remoto. Conéctate a la m�quina y ve a ");
   private String comando_regedit3 = (
       "\n[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\TelnetServer\\1.0]");
   private String comando_regedit4 = ("\nRegistro NTLM cambiar valor a 0.\nUna vez hecho esto debes reiniciar Telnet en el equipo remoto");
@@ -225,7 +225,7 @@ public class EjecutaComandos {
    * @param directorio String
    * @throws NuestraExeption
    */
-
+/*
  public void listarDirectorio(DefaultMutableTreeNode nodo,File directorio) throws NuestraExeption {
     try {
         //this.informable
@@ -240,10 +240,10 @@ public class EjecutaComandos {
                                 directorio);
     }
   }
+*/
 
 
-
-
+/*
    public void listarDirectorio(DefaultMutableTreeNode nodo,String directorio) throws NuestraExeption {
     try {
         //this.informable
@@ -259,7 +259,7 @@ public class EjecutaComandos {
                                 directorio);
     }
   }
-
+*/
 
 
   public void listarDirectorio(String directorio) throws NuestraExeption {
