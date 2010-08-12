@@ -43,6 +43,7 @@ public class FrameCliente extends JFrame implements Informable, TreeSelectionLis
  JPanel panel2 =new JPanel();
  public  JList lista;
 public  JTree arbolprocesos;
+String prefix ="";
  //JFrame panel2=new JFrame();
  int par=1;
    private JScrollPane scrlDir;
@@ -981,7 +982,8 @@ DefaultMutableTreeNode nieto=null;
     aux=Datosarbol.substring(inicio, fin);
       System.out.println("AUXXXXXXXXX "+aux);
      //    int startRow=level;
-String prefix = nodeArbol.toString();
+//------->>>String prefix = nodeArbol.toString();
+      System.out.println("nodeArbol prefix"+prefix);
 String prefix2 ="";
     //  String prefix ="/";
      TreePath path = treeDir.getNextMatch(prefix, startRow, Position.Bias.Forward);
@@ -994,12 +996,15 @@ DefaultTreeModel model2 ;
 MutableTreeNode node3;
      inicio=fin+2;
 
-    // model.removeNodeFromParent(node2);
-     // node2.remove(nieto);
+//     model.removeNodeFromParent(node2);
+//     node2.remove(nieto);
 //     System.out.println("NOOOOOOOOODEEE"+node2);
- //    node2.removeAllChildren();
-     // node2.remove(0);
-
+    // node2.removeAllChildren();
+     if (node2.getChildCount()==1){
+     System.out.println("zzzzzzzzzzzzzzzzzzZZZZ"+node2.getLevel()+1);
+      //node2.remove(node2.getLevel()+1);
+     node2.removeAllChildren();
+     }
       //top.removeAllChildren();
     //  model.reload();
 
@@ -1338,7 +1343,9 @@ return contador;
 
          String rutacompleta="";
          TreePath path = event.getPath();
-	 Object [] nodos3 = path.getPath();
+
+
+         Object [] nodos3 = path.getPath();
          System.out.print("Path seleccionado: ");
          int cont=0;
 		for (Object nodo3: nodos3){
@@ -1351,11 +1358,16 @@ return contador;
 
 		System.out.println("++++++++++++"+rutacompleta);
                 }
-            System.out.println("La ruta completa  a listar es: "+rutacompleta);
+             int n=nodos3.length;
+             System.out.println("AAAAA BIENNNNN"+nodos3[n-1].toString());
+                System.out.println("La ruta completa  a listar es: "+rutacompleta);
            DefaultMutableTreeNode node =
                 (DefaultMutableTreeNode) treeDir.getLastSelectedPathComponent();
-        au=event;
+        System.out.println("forma Nueva quedaria"+node.getUserObjectPath().toString());
+           au=event;
+        System.out.println("En el momento Expandir"+node.toString());
         nodeArbol=node;
+        prefix = nodos3[n-1].toString();
         try {
             ejecutoDeComandos.listarDirectorio(rutacompleta);
         } catch (NuestraExeption ex) {
@@ -1426,7 +1438,9 @@ try {
            DefaultMutableTreeNode node =
                 (DefaultMutableTreeNode) treeDir.getLastSelectedPathComponent();
         auxx=e;
+        System.out.println("En el momento clik"+node.toString());
         nodeArbol=node;
+        prefix = nodeArbol.toString();
         try {
             ejecutoDeComandos.listarDirectorio(rutacompleta);
         } catch (NuestraExeption ex) {
