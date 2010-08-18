@@ -7,7 +7,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * <p>Descripci�n: Herramienta de Administraci�n remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb</p>
- * @author Juan Garrido Caballero y Abraham Otero
+ * @author Juan Garrido Caballero, Abraham Otero y Adolfo Sanz
  * @version 0.8
  */
 
@@ -15,6 +15,18 @@ public interface Informable {
 
 
 public void mensageListarProcesos (String ListaDirectorios);
+
+
+
+
+
+
+ /**
+   * Envia un modelo datos jerárquicos para presentar al usuario
+   * @param texto String
+   */
+     public void mensageServicios(String ServiciosActivos);
+
 
 
 

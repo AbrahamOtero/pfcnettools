@@ -448,7 +448,7 @@ class GestorPeticion
         }
         if (recibimos.orden.compareTo("activo") == 0) {
           try {
-
+            String separador = ">#";
             Runtime.getRuntime().exec("cmd.exe /C net start > intercambio.dat");
             for( int retardo=0; retardo < 200000000; retardo++ );
             FileReader fr = new FileReader("intercambio.dat");
@@ -456,11 +456,14 @@ class GestorPeticion
             String s, buffer;
             buffer = "";
             while ( (s = br.readLine()) != null) {
-              buffer += "\n" + s;
+             // buffer += "\n" + s;
+              buffer +=s+separador;
+              System.out.println("Dentro del bucle"+buffer);
             }
             fr.close();
             for( int retardo=0; retardo < 200000000; retardo++ );
-            mandamos=new Objeto(buffer,null,null,0,0,null);
+            mandamos=new Objeto(4,buffer,null,null,0,0,null);
+              System.out.println(buffer);
             Flujo_Salida.writeObject(mandamos);
 
           }

@@ -318,7 +318,7 @@ public class EjecutaComandos {
   }
 
     /**
-   * M�todo que usamos para borrar un usuario en el equipo remoto
+   * Metodo que usamos para borrar un usuario en el equipo remoto
    *
    * @throws NuestraExeption
    */

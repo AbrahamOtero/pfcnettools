@@ -5,7 +5,7 @@ package net.javahispano.nettools.cliente;
  * <p>Descripci�n: Administraci�n Remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb </p>
- * @Programado por Juan Garrido Caballero
+ * @Programado por Juan Garrido Caballero y Adolfo Sanz
  * @version 2.0
  * Web: http://nettools20.cjb.net
  */
