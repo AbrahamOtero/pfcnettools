@@ -1000,8 +1000,16 @@ MutableTreeNode node3;
 //     node2.remove(nieto);
 //     System.out.println("NOOOOOOOOODEEE"+node2);
     // node2.removeAllChildren();
-     if (node2.getChildCount()==1){
-     System.out.println("zzzzzzzzzzzzzzzzzzZZZZ"+node2.getLevel()+1);
+     System.out.println("Numero de hojos"+node2.getNextNode().getChildCount());
+System.out.println("QQQQQQQQQQQQQ"+Datosarbol);
+     if (Datosarbol.equalsIgnoreCase(aux+separador)){
+    System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+   node2.getNextNode().removeAllChildren();
+     }
+    else
+    {
+     if (node2.getChildCount()==1 || node2.getChildCount()==0){
+     System.out.println("zzzzzzzzzzzzzzzzzzZZZZ"+node2.getLevel());
       //node2.remove(node2.getLevel()+1);
      node2.removeAllChildren();
      }
@@ -1013,6 +1021,7 @@ MutableTreeNode node3;
      while(inicio<Datosarbol.length()){
      fin=Datosarbol.indexOf(separador,inicio);
     aux=Datosarbol.substring(inicio, fin-1);
+         System.out.println("EL primer AAAAAAAAAAAAAArchivo");
     //prefix2=nodeArbol.toString()+aux;
      //    System.out.println("PPPPPPPPPPPPPPPPPPPPPP"+prefix2);
      esdirectorio=Datosarbol.substring(fin-1,fin);
@@ -1032,7 +1041,7 @@ MutableTreeNode node3;
         inicio=fin+2;
         cont++;
     }
-       
+  }
 
       /*System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYyyyyyyy3333333333333333333");
         
@@ -1472,7 +1481,7 @@ final JDialog panelprocesos = new JDialog(this);
 
 
 //JPanel panel3=new JPanel ();
-    DefaultListModel modelo = new DefaultListModel();
+   // DefaultListModel modelo = new DefaultListModel();
     DefaultTableModel modelo1 = new DefaultTableModel();
 
 //JTable tabla = new JTable (modelo);
@@ -1494,10 +1503,7 @@ final JDialog panelprocesos = new JDialog(this);
                                    "CPU", "Uso de memoria"};
 
     Object[][] data=new Object[total-3][5];
-    /*
-   Object[][] data = {
-       {"Mary", "Campione", "Esquiar", new Integer(5), new Boolean(false)},
-*/
+   
 
 String cadena1="";
  int estado=0;
@@ -1834,6 +1840,113 @@ public String VueltaCadena(String sCadena){
     return sCadenaInvertida;
 
 }
+public void sacarListaProcesosActivos(String ServiciosActivos)
+{
+    System.out.println("Dentro proceso");
+  int inicio=0, fin=4;
+final JDialog panelServicios = new JDialog(this);
+  JList lista = new JList();
+DefaultListModel modelo = new DefaultListModel();
+ String separador = ">#";
+        String aux=null;
+ int campos=NumeroDeSubdirectorios(ServiciosActivos,separador);
+    System.out.println("Numero Campos"+campos);
+
+
+ if (campos==0)
+ {
+      JOptionPane.showConfirmDialog(null, "Se ha completado el comando de forma incorrectamente, Vuelva a intentarlo.", "Error command",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+ }
+ else
+ {
+    for(int i = 1; i<=campos; i++){
+    fin=ServiciosActivos.indexOf(separador,inicio);
+    aux=ServiciosActivos.substring(inicio, fin);
+    modelo.addElement(aux);
+    inicio=fin+2;
+}
+lista.setModel(modelo);  
+JScrollPane scrollPane = new JScrollPane(lista);
+        JPanel panel4=new JPanel ();
+scrollPane.setPreferredSize (new Dimension(400,300));
+        Container container = this.getContentPane();
+        panel4.setLayout(new BorderLayout(1,1));
+panel4.add(scrollPane,BorderLayout.NORTH);
+JButton boton = new JButton("  Cerrar  ");
+panel4.add(boton,BorderLayout.EAST);
+
+ boton.addActionListener (
+
+         new ActionListener () {
+
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Cerrar Ventana");
+
+     try
+     {
+
+    panelServicios.dispose();
+     }
+    catch(Exception event)
+    {
+      JOptionPane.showConfirmDialog(null, "La venta de procesos no se puede cerrar", "Close Windows",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+              };
+
+            }
+         } // clase interna anónima
+         //la clase interna anónima
+      ); // Finalizar llamada para addActionListener
+
+panelServicios.setModal(true);
+panelServicios.setTitle("Lista de procesos");
+Container contentPane = panelServicios.getContentPane();
+contentPane.add(panel4, BorderLayout.CENTER);
+panelServicios.pack();
+panelServicios.setSize(new Dimension(600, 400));
+panelServicios.setLocationRelativeTo(this);
+
+
+//frameCliente.setLocationRelativeTo(null)
+
+panelServicios.show();
+ }
+}
+
+public void mensageServicios(String ServiciosActivos){
+    System.out.println("Sacamos la lista con los procesos activos");
+    sacarListaProcesosActivos(ServiciosActivos);
+       //Listar(ServiciosActivos);
+    /*
+       //lista.setModel(modelo);
+   lista = new JList(modelo);
+   // lista.setPreferredSize(new Dimension(300, 400));
+   lista.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+  // lista.setLayoutOrientation(JList.VERTICAL_WRAP);
+    //lista.setSelectionMode (ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    lista.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
+
+
+    lista.setVisibleRowCount(-1);
+   lista.setVisible(true);
+    scrlFiles = new JScrollPane(lista);
+    scrlFiles.setPreferredSize (new Dimension(400,400));*/
+
+    /*  scrlFiles.setVerticalScrollBarPolicy(
+   ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);//.HORIZONTAL_SCROLLBAR_ALWAYS);
+    */   // getContentPane().add(scrlFiles, BorderLayout.CENTER);
+//         panel3.add(scrollPane, BorderLayout.SOUTH);
+
+
+
+}
+
 
 
 
