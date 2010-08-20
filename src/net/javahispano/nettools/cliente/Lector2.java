@@ -13,7 +13,11 @@ import java.io.*;
 import javax.imageio.*;
 import java.awt.image.*;
 import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 
@@ -95,28 +99,56 @@ public class Lector2 implements Runnable {
 
 
 
-              else
-                System.out.println("1111111111"+Mensaje.orden);
+             // else
+              //  System.out.println("1111111111"+Mensaje.orden);
 
           pantalla += Mensaje.orden;
           
         }
-        if (Mensaje.imagen != null) {
+          System.out.println("Justo antes de entrar"+Mensaje.imagen+ ">>>>--- alto"+Mensaje.ancho+ "ancho"+ Mensaje.alto);
+        //if (Mensaje.imagen != null) {
+         if (Mensaje.ancho != 0) {
+
           try {
+              System.out.println("Justo  al entrar >>>>---");
             ImageHeight = Mensaje.ancho;
             ImageWidth = Mensaje.alto;
+            System.out.println("Dentro <<<<<<<<<<<<<<<<<<<");
             BufferedImage NewBufferedImage = new BufferedImage(ImageWidth,
                 ImageHeight, BufferedImage.TYPE_INT_RGB);
             Graphics g = NewBufferedImage.createGraphics();
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, ImageWidth, ImageHeight);
-            g.drawImage(Mensaje.imagen.getImage(), 0, 0, null);
+               System.out.println("Antes ---->Run");
+  cliente.mensageVideo(Mensaje.orden);
+               //          g.drawImage(Mensaje.imagen.getImage(), 0, 0, null);
+             ImageIcon img = new ImageIcon("c:\\capturo.jpg");
             g.dispose();
-            File outfile = new File("c:\\capturo.jpg");
-            ImageIO.write(NewBufferedImage, "jpg", outfile);
+          // File outfile = new File("c:\\capturo.jpg");
+           // ImageIO.write(NewBufferedImage, "jpg", outfile);
+         //    JDialog panelImagen = new JDialog();
+       // JLabel etiqueta = new JLabel(img);
+       //  JPanel panel5=new JPanel ();
+
+     //   Container container = this.getContentPane();
+       // panel5.setLayout(new BorderLayout(1,1));
+
+
+      // panelImagen.setModal(true);
+//panelImagen.setTitle("Pantalla remota22222");
+//panel5.add(etiqueta);
+//Container contentPane = panelImagen.getContentPane();
+//contentPane.add(panel5, BorderLayout.CENTER);
+//panelImagen.pack();
+//panelImagen.setSize(new Dimension(900, 900));
+//panelImagen.show();
+
+           
+             System.out.println("Antes ---->Run");
             Runtime.getRuntime().exec(
                 "rundll32.exe url.dll FileProtocolHandler c:\\capturo.jpg");
-
+ System.out.println("Despues ---->Runnnnnnn");
+  
           }
           catch (Exception event) {
             cliente.mensageInformacion(realizado +

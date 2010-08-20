@@ -556,7 +556,7 @@ public void StatusDesc(String desc)
   void conectarRadioButton_actionPerformed(ActionEvent e) {
     Object opcion;
     opcion = JOptionPane.showInputDialog(null, "Terminal a conectar",
-                                         "conexi�n", JOptionPane.DEFAULT_OPTION,
+                                         "conexión", JOptionPane.DEFAULT_OPTION,
                                          blockIcono, null, null);
     if (opcion == null) {
       return;
@@ -656,7 +656,7 @@ public void StatusDesc(String desc)
   void servidorTelnetMenu_actionPerformed(ActionEvent e) {
     int respuesta;
     respuesta = JOptionPane.showConfirmDialog(null,
-                                              "�Desea arrancar el servicio de telnet?",
+                                              "Desea arrancar el servicio de telnet?",
                                               "telnet",
                                               JOptionPane.YES_NO_CANCEL_OPTION,
                                               JOptionPane.INFORMATION_MESSAGE);
@@ -757,7 +757,7 @@ public void StatusDesc(String desc)
 
   void acercaDeNettolsMenu_actionPerformed(ActionEvent e) {
     JOptionPane.showConfirmDialog(null,
-        "Aplicaci�n realizada en Java y C.\nProgramado por Juan Garrido Caballero y \n Abraham Otero Quintana y \n Adolfo Sanz",
+        "Aplicación realizada en Java y C.\nProgramado por Juan Garrido Caballero y \n Abraham Otero Quintana y \n Adolfo Sanz",
                                   "NetTools 0.7", JOptionPane.CLOSED_OPTION,
                                   JOptionPane.CANCEL_OPTION, netTools);
 
@@ -832,7 +832,7 @@ public void StatusDesc(String desc)
   void borrarDirectorioMenu_actionPerformed(ActionEvent e) {
     Object opcion;
     opcion = JOptionPane.showInputDialog(null,
-        "Atenci�n!! Va usted a borrar directorios\nen la m�quina remota",
+        "Atención!! Va usted a borrar directorios\nen la m�quina remota",
                                          "Borrar Directorio",
                                          JOptionPane.OK_OPTION, borraDirectorio, null, null);
 
@@ -1922,31 +1922,107 @@ public void mensageServicios(String ServiciosActivos){
     System.out.println("Sacamos la lista con los procesos activos");
     sacarListaProcesosActivos(ServiciosActivos);
        //Listar(ServiciosActivos);
-    /*
-       //lista.setModel(modelo);
-   lista = new JList(modelo);
-   // lista.setPreferredSize(new Dimension(300, 400));
-   lista.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-  // lista.setLayoutOrientation(JList.VERTICAL_WRAP);
-    //lista.setSelectionMode (ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    lista.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
+}
+
+public void MostrarImagen(String Imagen){
+System.out.println("Recibiendo imagen video");
+ImageIcon img = new ImageIcon("c:/capturo.jpg");
+    final JDialog panelImagen = new JDialog(this);
+    
+    JLabel etiqueta = new JLabel(img);
+etiqueta.setIcon (new ImageIcon("c:\\capturo.jpg"));
+ etiqueta.paintImmediately(0, 0,etiqueta.getSize().width, etiqueta.getSize().height);
+
+//etiqueta.seti.setImageIcon(new ImageIcon("c:\\capturo.jpg"));
+
+    JScrollPane scrollPane = new JScrollPane(etiqueta);
+     JPanel panel5=new JPanel ();
+   //  panel5.removeAll();
+    panel5.repaint();
+
+    JPanel panel6=new JPanel ();
+    Container container = this.getContentPane();
+    panel5.setLayout(new BorderLayout(1,2));
 
 
-    lista.setVisibleRowCount(-1);
-   lista.setVisible(true);
-    scrlFiles = new JScrollPane(lista);
-    scrlFiles.setPreferredSize (new Dimension(400,400));*/
+       panelImagen.setModal(true);
 
-    /*  scrlFiles.setVerticalScrollBarPolicy(
-   ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);//.HORIZONTAL_SCROLLBAR_ALWAYS);
-    */   // getContentPane().add(scrlFiles, BorderLayout.CENTER);
-//         panel3.add(scrollPane, BorderLayout.SOUTH);
+panelImagen.setTitle("Pantalla remota22222333333");
+//panel5.add(etiqueta);
+panel5.add(scrollPane);
+//panel5.add(scrollPane,BorderLayout.NORTH);
+ panelImagen.repaint();
+
+
+JButton play = new JButton("play");
+JButton stop = new JButton("Stop");
+JButton pause =new JButton("Pause");
+panel6.add(play,BorderLayout.SOUTH);
+panel6.add(stop,BorderLayout.SOUTH);
+panel6.add(pause,BorderLayout.WEST);
+
+
+play.addActionListener (
+
+         new ActionListener () {
+
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Actualizando imagen");
+
+                try {
+                     panelImagen.dispose();
+                     
+                     ejecutoDeComandos.recibirImagenServidor();
+    }
+    catch (NuestraExeption ex) {
+      JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
+
+     /*try
+     {
+
+        panelImagen.dispose();
+        ejecutoDeComando.ListarProcesos();
+     }
+    catch(Exception event)
+    {
+      JOptionPane.showConfirmDialog(null, "Error,no se pudo Listar procesos", "error list process",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+              };*/
+
+            }
+         } // clase interna anónima
+         //la clase interna anónima
+      ); // Finalizar llamada para addActionListener
+
+
+
+
+
+
+
+Container contentPane = panelImagen.getContentPane();
+contentPane.add(panel5, BorderLayout.CENTER);
+contentPane.add(panel6, BorderLayout.SOUTH);
+panelImagen.pack();
+panelImagen.setSize(new Dimension(500, 500));
+panelImagen.show();
 
 
 
 }
 
+
+//recibe imagen
+public void mensageVideo(String NombreCaptura){
+    MostrarImagen(NombreCaptura);
+}
 
 
 
