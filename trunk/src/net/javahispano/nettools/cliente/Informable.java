@@ -19,6 +19,14 @@ public void mensageListarProcesos (String ListaDirectorios);
 
 
 
+ /**
+   * Envia imagen del pc
+   * @param texto String
+   */
+     public void mensageVideo(String NombreCaptura);
+
+
+
 
 
  /**
