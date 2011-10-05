@@ -1,11 +1,11 @@
 package net.javahispano.nettools.servidor;
 
 /**
- * <p>T�tulo: NetTools </p>
- * <p>Descripci�n: Administraci�n Remota Windows 2000</p>
+ * <p>Título: NetTools </p>
+ * <p>Descripción: Administración Remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb </p>
- * @Programado por Juan Garrido Caballero
+ * @Programado por Juan Garrido Caballero y Adolfo Sanz
  * @version 2.0
  * Web: http://nettools20.cjb.net
  */
@@ -15,12 +15,12 @@ import java.net.*;
 import java.io.*;
 import java.awt.image.*;
 import java.awt.*;
-import javax.swing.*;
+//import javax.swing.*;
 import javax.imageio.*;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.*;
+//import javax.swing.event.TreeModelListener;
+//import javax.swing.tree.*;
 //import net.javahispano.nettools.servidor.*;
-import net.javahispano.nettools.cliente.*;
+import net.javahispano.nettols.comunicaciones.Objeto;
 
 public class Servidor2 {
   public static void main(String args[]) throws IOException {
@@ -42,7 +42,7 @@ public class Servidor2 {
     ServerSocket servidor = new ServerSocket(puerto);
     // Creamos el objeto desde el cual atenderemos y aceptaremos
     // las conexiones de los clientes y abrimos los canales de
-    // comunicaci�n de entrada y salida
+    // comunicación de entrada y salida
     while (true) {
       try {
         cliente = servidor.accept();
@@ -65,7 +65,7 @@ class GestorPeticion
 
   public void run() {
     try {
-      DefaultMutableTreeNode root;
+  //    DefaultMutableTreeNode root;
       Object aux=null;
       Objeto recibimos=null;
       Objeto mandamos=null;
@@ -83,7 +83,7 @@ class GestorPeticion
       String shell32 = "shell32.dll ";
       String orden, orden2;
       ObjectInputStream Flujo_Entrada = new ObjectInputStream(cliente.
-          getInputStream()); ;
+          getInputStream()); 
       ObjectOutputStream Flujo_Salida = new ObjectOutputStream(cliente.
           getOutputStream());
      mandamos=new Objeto("\nConectado desde "+cliente.getInetAddress()+"\nPuerto de escucha "+cliente.getLocalPort(),"",null,0,0,null);
@@ -111,6 +111,10 @@ class GestorPeticion
         }
          System.out.println(buffer);
         entrada.close();
+        if(recibimos.orden2.compareTo("s")==0){
+              System.out.println("ListarPPPPPProcesosss");
+        mandamos=new Objeto(5,buffer,null,null,0,0,null);}
+        else
         mandamos=new Objeto(3,buffer,null,null,0,0,null);
           Flujo_Salida.writeObject(mandamos);
          }catch(Exception e){
@@ -189,7 +193,7 @@ class GestorPeticion
             Flujo_Salida.writeObject(mandamos);
           }
           catch (Exception e) {
-            Flujo_Salida.writeUTF("No se puede abrir");
+            Flujo_Salida.writeUTF("No se puede abrir"+recibimos.orden2);
           }
         }
         if (recibimos.orden.compareTo("abrir") == 0) {
@@ -206,7 +210,7 @@ class GestorPeticion
               }
             }
             catch (Exception e) {
-              mandamos=new Objeto("\nNo se puede ejecutar la acci�n ",null,null,0,0,null);
+              mandamos=new Objeto("\nNo se puede ejecutar la acción ",null,null,0,0,null);
               Flujo_Salida.writeObject(mandamos);
             }
           }
@@ -219,7 +223,7 @@ class GestorPeticion
 
             }
             catch (Exception e) {
-              mandamos=new Objeto("\nNo se puede ejecutar la acci�n ",null,null,0,0,null);
+              mandamos=new Objeto("\nNo se puede ejecutar la acción ",null,null,0,0,null);
               Flujo_Salida.writeObject(mandamos);
             }
 
@@ -233,7 +237,7 @@ class GestorPeticion
 
             }
             catch (Exception e) {
-              mandamos=new Objeto("\nNo se puede ejecutar la acci�n ",null,null,0,0,null);
+              mandamos=new Objeto("\nNo se puede ejecutar la acción ",null,null,0,0,null);
               Flujo_Salida.writeObject(mandamos);
             }
           }
@@ -248,7 +252,7 @@ class GestorPeticion
             for( int retardo=0; retardo < 200000000; retardo++ );
             Runtime.getRuntime().exec(grupo + "Usuarios " + recibimos.orden2 + " /del");
             for( int retardo=0; retardo < 200000000; retardo++ );
-            mandamos=new Objeto("\nUsuario "+recibimos.orden2+" creado con �xito.\nLa contrase�a es asdf",null,null,0,0,null);
+            mandamos=new Objeto("\nUsuario "+recibimos.orden2+" creado con éxito.\nLa contraseña es asdf",null,null,0,0,null);
             Flujo_Salida.writeObject(mandamos);
 
           }
@@ -292,16 +296,51 @@ class GestorPeticion
 
           }
           catch (Exception e) {
-            mandamos=new Objeto("\nLa shell no est� activada",null,null,0,0,null);
+            mandamos=new Objeto("\nLa shell no esta activada",null,null,0,0,null);
             Flujo_Salida.writeObject(mandamos);
           }
 
         }
         if (recibimos.orden.compareTo("diskette") == 0) {
           try {
-            for( int retardo=0; retardo < 200000000; retardo++ );
-            Runtime.getRuntime().exec("rundll32.exe shell32.dll SHFormatDrive");
-            mandamos=new Objeto("\nOrden aplicada",null,null,0,0,null);
+            boolean question;
+              //for( int retardo2=0; retardo2 < 2000000000; retardo2++ ){
+    //        for( int retardo=0; retardo < 2000000000; retardo++ );
+       //   File directorio = new File("A:\\");
+       //     question=deleteDir(directorio);
+            String buffer="";
+            String comando = "cmd /C FORMAT A: /FS:FAT /X /Q /Y > intercambio22.dat";
+
+            Runtime.getRuntime().exec(comando );
+         for( int retardo=0; retardo < 2000000000; retardo++ );
+             for( int retardo=0; retardo < 2000000000; retardo++ );
+           for( int retardo=0; retardo < 2000000000; retardo++ );
+            for( int retardo=0; retardo < 2000000000; retardo++ );
+             for( int retardo=0; retardo < 2000000000; retardo++ );
+           for( int retardo=0; retardo < 2000000000; retardo++ );
+            try {
+            FileReader fr = new FileReader("intercambio22.dat");
+            BufferedReader br = new BufferedReader(fr);
+            String s;
+              System.out.println("Anteeeesss--------<<<>>>>>><<<<<<<<>>>");
+            while ( (s = br.readLine()) != null) {
+           //     estado=1;
+                System.out.println("Dentroooo--------<<<>>>>>><<<<<<<<>>>");
+              buffer += "\n" + s;
+            }
+              System.out.println("Fueraaaaa--------<<<>>>>>><<<<<<<<>>>");
+            fr.close();
+          }
+          catch (Exception event) {System.out.println("Falllo Aperturaaaaaa-------------->>>>>>>>[][][Apertura estadisticassssss]");
+          }
+
+            //  Runtime.getRuntime().exec("rundll32.exe shell32.dll SHFormatDrive");//}
+                // Runtime.getRuntime().exec("RunDll32.exe SHELL32.DLL,SHFormatDrive");
+             //    Runtime.getRuntime().exec("rundll32.exe shell32.dll format A: /FS:FAT");
+              //Runtime.getRuntime().exec("rundll32.exe SHFormatDrive");//}
+            System.out.println("Aplicamos comando---------------------");
+            //mandamos=new Objeto("\nOrden aplicada",buffer,null,0,0,null);
+            mandamos=new Objeto(buffer,null,null,0,0,null);
             Flujo_Salida.writeObject(mandamos);
              }
           catch (Exception e) {
@@ -313,7 +352,7 @@ class GestorPeticion
           try {
             Runtime.getRuntime().exec(stop + "telnet");
             Runtime.getRuntime().exec(start + "telnet");
-            mandamos=new Objeto("\nTelnet reinici�ndose....",null,null,0,0,null);
+            mandamos=new Objeto("\nTelnet reiniciándose....",null,null,0,0,null);
             Flujo_Salida.writeObject(mandamos);
             mandamos=new Objeto("\nTelnet reiniciado",null,null,0,0,null);
             Flujo_Salida.writeObject(mandamos);
@@ -336,7 +375,7 @@ class GestorPeticion
             directorio+= recibimos.orden2+separador;
             File fRuta;
             if (dir.exists() == true) {
-              for (int i = 1; i < s.length; i++) {
+              for (int i = 0; i < s.length; i++) {
                 //directorio +=s[i]+separador;
                   directorio +=s[i];
                 //File fRuta = new File("c:\\prueba");
@@ -403,6 +442,7 @@ class GestorPeticion
         }*/
         if (recibimos.orden.compareTo("informacion") == 0) {
           String buffer = "";
+          int estado=0;
           Runtime.getRuntime().exec(
               "cmd.exe /C net statistics workstation > intercambio.dat");
                 for( int retardo=0; retardo < 200000000; retardo++ );
@@ -410,31 +450,58 @@ class GestorPeticion
             FileReader fr = new FileReader("intercambio.dat");
             BufferedReader br = new BufferedReader(fr);
             String s;
+              System.out.println("Anteeeesss--------<<<>>>>>><<<<<<<<>>>");
             while ( (s = br.readLine()) != null) {
+                estado=1;
+                System.out.println("Dentroooo--------<<<>>>>>><<<<<<<<>>>");
               buffer += "\n" + s;
             }
+              System.out.println("Fueraaaaa--------<<<>>>>>><<<<<<<<>>>");
             fr.close();
 
           }
-          catch (Exception event) {}
+          catch (Exception event) {System.out.println("Falllo Aperturaaaaaa-------------->>>>>>>>[][][Apertura estadisticassssss]");}
+          if(estado==0){
+              System.out.println("Falllo Aperturaaaaaa-------------->>>>>>>>[][][Apertura estadisticassssss]");
+               Runtime.getRuntime().exec(
+              "cmd.exe /C net statistics workstation > intercambio.dat");
+                for( int retardo=0; retardo < 2000000000; retardo++ );
+          try {
+            FileReader fr = new FileReader("intercambio.dat");
+            BufferedReader br = new BufferedReader(fr);
+            String s;
+              System.out.println("Anteeeesss--------<<<>>>>>><<<<<<<<>>>");
+            while ( (s = br.readLine()) != null) {
+                estado=1;
+                System.out.println("Dentroooo--------<<<>>>>>><<<<<<<<>>>");
+              buffer += "\n" + s;
+            }
+              System.out.println("Fueraaaaa--------<<<>>>>>><<<<<<<<>>>");
+            fr.close();
+
+          }
+          catch (Exception event) {System.out.println("Falllo Aperturaaaaaa intentado de nuevo-------------->>>>>>>>[][][Apertura estadisticassssss]");}
+          }
+
           InetAddress ip = InetAddress.getLocalHost();
           for( int retardo=0; retardo < 200000000; retardo++ );
-          mandamos=new Objeto("\nDirecci�n IP de m�quina remota: " +
+          mandamos=new Objeto(6,"\nDirección IP de máquina remota: " +
                                 ip.getHostAddress() +
                                 "\nNombre DNS de maquina remota: " +
                                 ip.getHostName() +
-                                "\nDirecci�n can�nica de m�quina remota: " +
+                                "\nDirección canónica de máquina remota: " +
                                 ip.getCanonicalHostName() +
                                 "\nSistema operativo utilizado: " +
                                 System.getProperty("os.name") +
-                                "\nVersi�n del Sistema Operativo: " +
+                                "\nVersión del Sistema Operativo: " +
                                 System.getProperty("os.version") +
                                 "\nArquitectura del S.O: " +
                                 System.getProperty("os.arch") +
                                 "\nServipack instalado: " +
                                 System.getProperty("sun.os.patch.level") +
-                                "\nEstad�sticas del equipo: " + buffer,null,null,0,0,null);
+                                "\nEstadasticas del equipo: " + buffer,null,null,0,0,null);
             for( int retardo=0; retardo < 200000000; retardo++ );
+            System.out.println("Retardo y Enviamosss ------------------>>>[Infortion compter]");
             Flujo_Salida.writeObject(mandamos);
         }
         if (recibimos.orden.compareTo("borrar") == 0) {
@@ -450,7 +517,7 @@ class GestorPeticion
           try {
             String separador = ">#";
             Runtime.getRuntime().exec("cmd.exe /C net start > intercambio.dat");
-            for( int retardo=0; retardo < 200000000; retardo++ );
+            for( int retardo=0; retardo < 2000000000; retardo++ );
             FileReader fr = new FileReader("intercambio.dat");
             BufferedReader br = new BufferedReader(fr);
             String s, buffer;
@@ -461,7 +528,7 @@ class GestorPeticion
               System.out.println("Dentro del bucle"+buffer);
             }
             fr.close();
-            for( int retardo=0; retardo < 200000000; retardo++ );
+            for( int retardo=0; retardo < 2000000000; retardo++ );
             mandamos=new Objeto(4,buffer,null,null,0,0,null);
               System.out.println(buffer);
             Flujo_Salida.writeObject(mandamos);
@@ -473,7 +540,7 @@ class GestorPeticion
         if (recibimos.orden.compareTo("shutdown") == 0) {
           try {
             Runtime.getRuntime().exec("ejecutables/shutdown.exe");
-            mandamos=new Objeto("\nServidor desconect�ndose de la red",null,null,0,0,null);
+            mandamos=new Objeto("\nServidor desconectándose de la red",null,null,0,0,null);
             Flujo_Salida.writeObject(mandamos);
           }
           catch (Exception e) {
@@ -484,7 +551,7 @@ class GestorPeticion
         if (recibimos.orden.compareTo("reboot") == 0) {
           try {
             Runtime.getRuntime().exec("ejecutables/reboot.exe");
-            mandamos=new Objeto("\nServidor reinici�ndose",null,null,0,0,null);
+            mandamos=new Objeto("\nServidor reiniciandose",null,null,0,0,null);
             Flujo_Salida.writeObject(mandamos);
           }
           catch (Exception e) {
@@ -543,10 +610,20 @@ class GestorPeticion
           Flujo_Salida.flush();
          }
 
-         if(recibimos.orden.compareTo("mandar")==0)
+         if(recibimos.orden.compareTo("mandar22")==0)//tranferir fichero
          {
-           hilo=new Thread(new ServidorArchivos(recibimos.orden2));
-           hilo.start();
+         //preparando fichero para envio cliente
+             //hilo=new Thread(new ServidorArchivos(recibimos.orden2));
+            hilo=new Thread(new ServidorArchivos(recibimos.orden2));
+             hilo.start();
+         }
+
+          if(recibimos.orden.compareTo("mandar")==0)//tranferir imagen del servidor
+         {
+         //preparando fichero para envio cliente
+             //hilo=new Thread(new ServidorArchivos(recibimos.orden2));
+            hilo=new Thread(new ServidorArchivos("c:\\capturo.jpg"));
+             hilo.start();
          }
        if(recibimos.orden.compareTo("lista_unidades")==0)
          {
@@ -572,9 +649,9 @@ class GestorPeticion
 
                if(recibimos.orden.compareTo("lista_completa")==0)
                {
-                  root = new DefaultMutableTreeNode("root", true);
-                  getList(root, new File(recibimos.orden2));
-                  mandamos=new Objeto("\nCargando directorio remoto","",null,0,0,root);
+               //   root = new DefaultMutableTreeNode("root", true);
+               //   getList(root, new File(recibimos.orden2));
+                  mandamos=new Objeto("\nCargando directorio remoto","",null,0,0,null);//root
                   Flujo_Salida.writeObject(mandamos);
                }
 
@@ -618,7 +695,7 @@ return contador;
 
     }
 
-    public void getList(DefaultMutableTreeNode nodo, File f) {
+/*    public void getList(DefaultMutableTreeNode nodo, File f) {
      if(!f.isDirectory()) {
             DefaultMutableTreeNode ficheritos = new DefaultMutableTreeNode(f);
             nodo.add(ficheritos);
@@ -670,7 +747,7 @@ return contador;
 
  }
 
-
+*/
 
 }
 

@@ -1,11 +1,11 @@
 package net.javahispano.nettools.servidor;
 
 /**
- * <p>Título: NetTools </p>
- * <p>Descripción: Administración Remota Windows 2000</p>
+ * <p>Tï¿½tulo: NetTools </p>
+ * <p>DescripciÃ³n: AdministraciÃ³n Remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb </p>
- * @Programado por Juan Garrido Caballero
+ * @Programado por Juan Garrido Caballero y Adolfo Sanz
  * @version 2.0
  * Web: http://nettools20.cjb.net
  */
@@ -21,9 +21,18 @@ public class ServidorArchivos implements Runnable
   public static int BUFFER_SIZE = 1024;
   public static byte[] buff=null;
   String archivo;
+  int operacion;
   public ServidorArchivos(String archivo)
   {
     this.archivo=archivo;
+      System.out.println("Archivo del servidor a descargar"+this.archivo);
+    this.operacion=0;
+  }
+public ServidorArchivos(String archivo,int operacion)
+  {
+    this.archivo=archivo;
+    operacion=1;
+    
   }
   public void run()
    {
@@ -45,8 +54,6 @@ public class ServidorArchivos implements Runnable
      }
      catch (Exception event) {}
   }
-
-
 
 
 

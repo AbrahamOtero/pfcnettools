@@ -2,18 +2,19 @@ package net.javahispano.nettools.cliente;
 
 /**
  * <p>T�tulo: NetTools 2.0</p>
- * <p>Descripci�n: Herramienta de Administraci�n remota Windows 2000</p>
+ * <p>Descripci�n: Herramienta de Administración remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb</p>
- * @author Juan Garrido Caballero y Abraham Otero
+ * @author Juan Garrido Caballero, Abraham Otero y Adolfo Sanz
  * @version 0.8
  */
 
+import net.javahispano.nettools.cliente.UI.JScanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.javahispano.nettols.comunicaciones.Objeto;
 import java.net.*;
-import javax.swing.*;
-import java.io.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import net.javahispano.nettools.cliente.UI.*;
+
 
 public class EjecutaComandos {
   private Socket cliente = null;
@@ -24,7 +25,7 @@ public class EjecutaComandos {
   private String comando_regedit = (
       "\nDebes quitar la protección NTLM del registro del sistema.");
   private String comando_regedit2 = (
-      "\nEjecuta el registro remoto. Conéctate a la m�quina y ve a ");
+      "\nEjecuta el registro remoto. Conéctate a la máquina y ve a ");
   private String comando_regedit3 = (
       "\n[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\TelnetServer\\1.0]");
   private String comando_regedit4 = ("\nRegistro NTLM cambiar valor a 0.\nUna vez hecho esto debes reiniciar Telnet en el equipo remoto");
@@ -44,7 +45,7 @@ public class EjecutaComandos {
   }
 
   /**
-   * M�todo que usamos para conectar con el Servidor
+   * Metodo que usamos para conectar con el Servidor
    */
 
   public void conectar(String host) throws NuestraExeption {
@@ -59,12 +60,14 @@ public class EjecutaComandos {
       {informable.StatusConex(host);}
     }
     catch (Exception e) {
-      throw new NuestraExeption("No se ha podido establecer conexi�n");
+      throw new NuestraExeption("No se ha podido establecer conexión");
+    //     JOptionPane.showConfirmDialog(null,"No se ha podido establecer conexión","NetTools",JOptionPane.CLOSED_OPTION,JOptionPane.INFORMATION_MESSAGE);
+
     }
   }
 
   /**
-   * M�todo que usamos para requerir informaci�n del Servidor
+   * Método que usamos para requerir informaci�n del Servidor
    */
 
   public void getInformacionHost() throws NuestraExeption {
@@ -73,7 +76,7 @@ public class EjecutaComandos {
       conexion.MandaMensaje(nuevoMensaje);
     }
     catch (Exception e) {
-      throw new NuestraExeption("No se ha podido recibir informaci�n del host");
+      throw new NuestraExeption("No se ha podido recibir información del host");
     }
   }
 
@@ -89,7 +92,7 @@ public class EjecutaComandos {
 
   /**
    *
-   * Abre una urlmde la m�quia remota
+   * Abre una urlmde la máquia remota
    * @param url String
    * @throws NuestraExeption
    */
@@ -119,7 +122,7 @@ public class EjecutaComandos {
       hilo.start();
     }
     catch (Exception event) {
-      throw new NuestraExeption("No se puede ejecutar la acci�n");
+      throw new NuestraExeption("No se puede ejecutar la acción");
     }
 
   }
@@ -304,7 +307,7 @@ public class EjecutaComandos {
   /**
    * Clase auxiliar para ecanear puertos
    * <p>T�tulo: NetTools 2.0</p>
-   * <p>Descripci�n: Herramienta de Administraci�n remota Windows 2000</p>
+   * <p>Descripción: Herramienta de Administraci�n remota Windows 2000</p>
    * <p>Copyright: Copyright (c) 2004</p>
    * <p>Empresa: fenomenoweb</p>
    * @author Juan Garrido Caballero
@@ -314,7 +317,9 @@ public class EjecutaComandos {
    * Busca puertos en el host que se le indique.
    */
   public void escaneaPuertos() {
-    new JScanner("puertos").show();
+ //  new JScanner("puertos").setLocationRelativeTo(null);
+      new JScanner("puertos").show();
+
   }
 
     /**
@@ -386,7 +391,7 @@ public class EjecutaComandos {
   }
 
   /**
-   * M�todo que usamos para borrar un directorio en el Servidor
+   * Método que usamos para borrar un directorio en el Servidor
    *
    * @throws NuestraExeption
    */
@@ -408,7 +413,7 @@ public class EjecutaComandos {
    *
    * @throws NuestraExeption
    */
-  public void recibirImagenServidor() throws NuestraExeption {
+  public void recibirImagenServidor(int operacion) throws NuestraExeption {
     try {
       Objeto nuevoMensaje = new Objeto("imagen", "", null, 0, 0, null);
       conexion.MandaMensaje(nuevoMensaje);
@@ -420,14 +425,58 @@ public class EjecutaComandos {
       throw new NuestraExeption("No se ha podido cargar la imagen del servidor");
     }
   }
+  public void recibirImagenServidor() throws NuestraExeption {
+    try {
+        System.out.println("--------[EJECUTOR] Iniciando...");
+        Objeto nuevoMensaje = new Objeto("imagen", "", null, 0, 0, null);
+
+
+        System.out.println("--------[EJECUTOR] conexion.MandaMensaje()...");
+        conexion.MandaMensaje(nuevoMensaje);
+
+//        System.out.println("--------[EJECUTOR] Llmando a RECIBIDOR (hilo.start(RecibidorArchivos))...");
+//        Thread hilo = new Thread(new RecibidorArchivos(host,1));
+//        hilo.start();
+
+        System.out.println("--------[EJECUTOR] Llmando a RECIBIDOR (RecibidorArchivos)...");
+        RecibidorArchivos recibeArchivos = new RecibidorArchivos(host,1);
+        recibeArchivos.run();
+
+        System.out.println("--------[EJECUTOR] Fin.");
+    }
+    catch (Exception e) {
+      throw new NuestraExeption("No se ha podido cargar la imagen del servidor");
+    }
+  }
+
+/*******************************************************/
+  public void recibirImagenServidor2(String archivo) throws NuestraExeption {
+    try {
+        System.out.println("Comienza La operacion ---->>>>> DESCARGA" );
+      Objeto nuevoMensaje = new Objeto("mandar22", archivo, null, 0, 0, null);
+      conexion.MandaMensaje(nuevoMensaje);
+      Thread hilo = new Thread(new RecibidorArchivos(host));
+      hilo.start();
+    }
+    catch (Exception e) {
+      throw new NuestraExeption(
+          "No se ha podido descargar el fichero del servidor");
+    }
+  }
+
+  /*******************************************************/
+
+
+
 
   /**
-   * M�todo que usamos para recibir un archivo del servidor
+   * Método que usamos para recibir un archivo del servidor
    *
    * @throws NuestraExeption
    */
   public void recibirImagenServidor(String archivo) throws NuestraExeption {
     try {
+        System.out.println("Comienza La operacion ---->>>>> DESCARGA" );
       Objeto nuevoMensaje = new Objeto("mandar", archivo, null, 0, 0, null);
       conexion.MandaMensaje(nuevoMensaje);
       Thread hilo = new Thread(new RecibidorArchivos(host));
@@ -454,7 +503,7 @@ public class EjecutaComandos {
           "No se han podido listar unidades de disco remoto");
     }
   }
-
+/*
   public void listarCompleto( DefaultMutableTreeNode node,File f) throws NuestraExeption {
     try {
 
@@ -466,6 +515,21 @@ public class EjecutaComandos {
       throw new NuestraExeption("No se ha podido listar el directorio remoto");
     }
   }
+*/
+  /**
+   * Método que usamos para limpiar la consola remoto
+   *
+   * @throws NuestraExeption
+   */
+  public void ClearShell(){
+      System.out.println("En disposicion de limpiar la consola------------------->>>>>>>>>>[[[[[");
+        try {
+            conectar(host);
+        } catch (NuestraExeption ex) {
+            Logger.getLogger(EjecutaComandos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+  }
+
 
 
 
@@ -486,6 +550,26 @@ public class EjecutaComandos {
     }
   }
 
+
+  public void ListarProcesos(int n) throws NuestraExeption
+ {
+   try
+   {
+
+     System.out.println("ListarPPPPPProceso");
+
+     Objeto nuevoMensaje=new Objeto("ListaProcess","s",null,0,0,null);
+    // nuevoMensaje.setPeticion(1);// 1 listar procesos
+     conexion.MandaMensaje(nuevoMensaje);
+
+   }
+   catch(Exception event)
+   {
+     throw new NuestraExeption("No se puede ejecutar la acción");
+   }
+ }
+
+
   public void ListarProcesos() throws NuestraExeption
  {
    try
@@ -500,7 +584,8 @@ public class EjecutaComandos {
    }
    catch(Exception event)
    {
-     throw new NuestraExeption("No se puede ejecutar la acci�n");
+     throw new NuestraExeption("No se puede ejecutar la acción");
+
    }
  }
 
@@ -513,7 +598,7 @@ public class EjecutaComandos {
    }
    catch(Exception event)
    {
-     throw new NuestraExeption("No se puede ejecutar la acci�n");
+     throw new NuestraExeption("No se puede ejecutar la acción");
    }
  }
 
