@@ -2,7 +2,7 @@ package net.javahispano.nettools.cliente;
 
 /**
  * <p>T�tulo: NetTools </p>
- * <p>Descripci�n: Administraci�n Remota Windows 2000</p>
+ * <p>Descripcin: Administraci�n Remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb </p>
  * @Programado por Juan Garrido Caballero y Adolfo Sanz
@@ -11,9 +11,10 @@ package net.javahispano.nettools.cliente;
  */
 
 
+import net.javahispano.nettols.comunicaciones.Objeto;
 import java.io.*;
 import java.net.*;
-import javax.swing.*;
+
 
 public class Conexiones
 {
@@ -61,7 +62,7 @@ public class Conexiones
     }
     catch(Exception event)
     {
-     JOptionPane.showConfirmDialog(null,event,"NetTools",JOptionPane.CLOSED_OPTION,JOptionPane.INFORMATION_MESSAGE);
+    // JOptionPane.showConfirmDialog(null,event,"NetTools",JOptionPane.CLOSED_OPTION,JOptionPane.INFORMATION_MESSAGE);
 
     }
   }

@@ -2,24 +2,22 @@ package net.javahispano.nettools.cliente;
 
 /**
  * <p>T�tulo: NetTools 2.0</p>
- * <p>Descripci�n: Herramienta de Administraci�n remota Windows 2000</p>
+ * <p>Descripción: Herramienta de Administraci�n remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb</p>
- * @author Juan Garrido Caballero y Abraham Otero
+ * @author Juan Garrido Caballero, Abraham Otero y Adolfo Sanz
  * @version 0.8
  */
 
-import java.io.*;
-import javax.imageio.*;
+import net.javahispano.nettols.comunicaciones.Objeto;
+
 import java.awt.image.*;
 import java.awt.*;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
+
+
+
+
 
 public class Lector2 implements Runnable {
   private Informable cliente;
@@ -28,6 +26,7 @@ public class Lector2 implements Runnable {
   public static int ImageWidth = 0;
 
   public Lector2(Informable cliente, Conexiones conexion) {
+      System.out.println("CLIENTEEEEEEE|||||||||||||||_____>>>"+cliente.toString());
     this.cliente = cliente;
     this.conexion = conexion;
   }
@@ -46,13 +45,6 @@ public class Lector2 implements Runnable {
                  System.out.println("Todos las unidades de disco"+Mensaje.orden);
                  cliente.mensageInformacionArbol(Mensaje.orden);
                  Mensaje.orden=Mensaje.orden.replaceAll(">#","\n");
-       /* JTree tree = new JTree(Mensaje.root);
-        JFrame v = new JFrame();
-        JScrollPane scroll = new JScrollPane(tree);
-        v.getContentPane().add(scroll);
-        v.pack();
-        v.setVisible(true);*/
-      //  v.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
                  System.out.println("Salimos");
              }
@@ -64,44 +56,40 @@ public class Lector2 implements Runnable {
                  // pantalla += Mensaje.orden;
                  //  cliente.
             cliente.mensageReconstruirArbol(Mensaje.orden);
-          // String Cadena
+       
                    Mensaje.orden=Mensaje.orden.replaceAll(">#","\n");
-             //   System.out.println("cadena++++"+Cadena);
-           //JTree tree = new JTree(Mensaje.root);
-       /* JFrame v = new JFrame();
-        JScrollPane scroll = new JScrollPane(tree);
-        v.getContentPane().add(scroll);
-        v.pack();
-        v.setVisible(true);*/
-            //      Tree arbol=new Tree (Mensaje.orden);
-
+        
 
             }
              if (Mensaje.peticion==3){
-                 System.out.println("Preparado para listar los procesoos");
+                 System.out.println("Preparado para listar los procesoos 333");
                  System.out.println(Mensaje.orden);
+              cliente.mensageInformacion(realizado + pantalla);
                 cliente.mensageListarProcesos(Mensaje.orden);
                  Mensaje.orden=Mensaje.orden.replaceAll(">#","\n");
-
-
-
-
              }
+
+              if (Mensaje.peticion==5){
+                 System.out.println("Preparado para listar los procesoos 55555");
+                 System.out.println(Mensaje.orden);
+                cliente.mensageActualizarListarProcesos(Mensaje.orden);
+                 Mensaje.orden=Mensaje.orden.replaceAll(">#","\n");
+             }
+
              if (Mensaje.peticion==4){
                  System.out.println("Preparado para listar los procesoos");
                  System.out.println(Mensaje.orden);
                 cliente.mensageServicios(Mensaje.orden);
                  Mensaje.orden=Mensaje.orden.replaceAll(">#","\n");
              }
+             if (Mensaje.peticion==6){
+                 System.out.println("Retardo y Enviamosss ------------------>>>[Infortion compter]");
+                 cliente.mensageInformacionEquipo(Mensaje.orden);
+             }
 
 
 
-
-
-
-             // else
-              //  System.out.println("1111111111"+Mensaje.orden);
-
+          System.out.println("---------->>>>> mostramos por terminal");
           pantalla += Mensaje.orden;
           
         }
@@ -117,37 +105,21 @@ public class Lector2 implements Runnable {
             BufferedImage NewBufferedImage = new BufferedImage(ImageWidth,
                 ImageHeight, BufferedImage.TYPE_INT_RGB);
             Graphics g = NewBufferedImage.createGraphics();
-            g.setColor(Color.BLACK);
+          //  g.setColor(Color.BLACK);
             g.fillRect(0, 0, ImageWidth, ImageHeight);
                System.out.println("Antes ---->Run");
-  cliente.mensageVideo(Mensaje.orden);
-               //          g.drawImage(Mensaje.imagen.getImage(), 0, 0, null);
-             ImageIcon img = new ImageIcon("c:\\capturo.jpg");
-            g.dispose();
-          // File outfile = new File("c:\\capturo.jpg");
-           // ImageIO.write(NewBufferedImage, "jpg", outfile);
-         //    JDialog panelImagen = new JDialog();
-       // JLabel etiqueta = new JLabel(img);
-       //  JPanel panel5=new JPanel ();
-
-     //   Container container = this.getContentPane();
-       // panel5.setLayout(new BorderLayout(1,1));
-
-
-      // panelImagen.setModal(true);
-//panelImagen.setTitle("Pantalla remota22222");
-//panel5.add(etiqueta);
-//Container contentPane = panelImagen.getContentPane();
-//contentPane.add(panel5, BorderLayout.CENTER);
-//panelImagen.pack();
-//panelImagen.setSize(new Dimension(900, 900));
-//panelImagen.show();
+  
+          //   g.drawImage(NewBufferedImage, 0, 0, null);
+            // g.drawImage(Mensaje.imagen.getImage(), 0, 0, null);
+               ImageIcon img = new ImageIcon("c:\\capturo.jpg");
+      
+           cliente.mensageVideo(Mensaje.orden);
 
            
              System.out.println("Antes ---->Run");
-            Runtime.getRuntime().exec(
+            /*Runtime.getRuntime().exec(
                 "rundll32.exe url.dll FileProtocolHandler c:\\capturo.jpg");
- System.out.println("Despues ---->Runnnnnnn");
+ System.out.println("Despues ---->Runnnnnnn");*/
   
           }
           catch (Exception event) {
@@ -157,13 +129,21 @@ public class Lector2 implements Runnable {
         }
         if (Mensaje.root != null) {
             System.out.println("Dentro del root22222222222255555559999999");
-       //   Frame2 nuevo = new Frame2(Mensaje.root);
-   //       nuevo.show();
+       
         }
          
         cliente.mensageInformacion(realizado + pantalla);
       }
 
     }
+
   }
+
+
+/*
+       public void run2() {
+        for (int i = 0; i < 10 ; i++)
+           // System.out.println(i + " " + getName());
+        System.out.println("Termina thread);}
+*/
 }

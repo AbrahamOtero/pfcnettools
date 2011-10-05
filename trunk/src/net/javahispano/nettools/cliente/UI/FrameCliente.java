@@ -1,11 +1,16 @@
 package net.javahispano.nettools.cliente.UI;
 
+import javax.swing.table.TableModel;
+import net.javahispano.nettols.comunicaciones.Objeto;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowListener;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import net.javahispano.nettools.cliente.*;
 import java.awt.event.*;
@@ -14,6 +19,7 @@ import java.io.FileFilter;
 import java.lang.Object;
 import javax.swing.border.*;
 import java.net.*;
+import java.sql.Connection;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
@@ -24,13 +30,15 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+//import net.javahispano.nettools.cliente.UI.java1415.MiRendererDeArbol;
 
 /**
  * <p>T�tulo: NetTools </p>
- * <p>Descripci�n: Herramienta de Administraci�n remota Windows 2000</p>
+ * <p>Descripción: Herramienta de Administración remota Windows 2000</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Empresa: fenomenoweb</p>
- * @author Juan Garrido Caballero y Abraham Otero
+ * @author Juan Garrido Caballero y Abraham Otero y Adolfo Sanz 
  * @version 0.8
  */
 
@@ -38,12 +46,52 @@ public class FrameCliente extends JFrame implements Informable, TreeSelectionLis
   private EjecutaComandos ejecutoDeComandos;
   JTabbedPane tabbedPane = new JTabbedPane();
         //ImageIcon icon = createImageIcon("images/middle.gif");
+ DefaultTreeCellRenderer render=null;
   JTree arbol=null;
    DefaultMutableTreeNode nodeArbol;
  JPanel panel2 =new JPanel();
+int entrar=0;
+//JDialog panelprocesos = null;//new JDialog(this);
+ //JDialog panelprocesos = new JDialog(this);
+ JPanel paneltablaproces = new JPanel();
+    JPanel panel3 = new JPanel();
+
+ JDialog     panelInformacion =   null;
+
+
  public  JList lista;
 public  JTree arbolprocesos;
+public JTable table;
 String prefix ="";
+int estado=0;
+int tipo_tam=0;
+int contarr=0;
+String rutacompleta2="";
+/*final */  JDialog     panelImagen =   null; //new JDialog(this);
+JLabel      etiqueta=   null;
+JScrollPane scrollPane=   null;
+ImageIcon   iIcon1=   null;
+Image       img1=   null;
+Image       img2=   null;
+ImageIcon   iIcon2=   null;
+JPanel      panel5=   null;
+JButton     play=   null;
+JButton     psize= null;
+JButton     stop=   null;
+JButton     pause=   null;
+JButton     save=   null;
+JButton     exit=   null;
+JPanel      panel6=   null;
+JPanel      panelbotonArbol=   null;
+
+JButton     deletedir=   null;
+JButton     deletefile=   null;
+JButton    download=null;
+JButton    closePestaña=null;
+JButton clear = null;
+
+Container   contentPane=   null;
+
  //JFrame panel2=new JFrame();
  int par=1;
    private JScrollPane scrlDir;
@@ -99,6 +147,26 @@ TreeExpansionEvent au;
   ImageIcon iconoExplorer = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/iexplore.gif"));
   ImageIcon iconoCarpeta = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/carpeta.gif"));
   ImageIcon iconoDownload = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/download.gif"));
+  ImageIcon iconoPlay = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/play1.gif"));
+  ImageIcon iconobig =new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/big.png"));
+  ImageIcon iconosmall =new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/small.png"));
+  ImageIcon iconoStop = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/stop.gif"));
+  ImageIcon iconoPause = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/pause.gif"));
+  ImageIcon iconoExit = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/exit.gif"));
+   ImageIcon iconorefresh = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/reload3.gif"));
+ ImageIcon iconoclear = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/clear.gif"));
+  //imagenes arbol
+ ImageIcon iconoword = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/word2.png"));
+ ImageIcon iconoexcel= new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/excel.png"));
+ ImageIcon iconopowerpoint = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/powerpoint.png"));
+ ImageIcon iconoadobe = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/adobe.png"));
+  ImageIcon iconoinformacion = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/photo3.gif"));
+
+
+
+
+  // playb
+
 
   JMenuBar jMenuBar1 = new JMenuBar();
   JMenu conexionMenu = new JMenu();
@@ -109,7 +177,7 @@ TreeExpansionEvent au;
   JMenuItem ejecutarMenu = new JMenuItem();
   JMenuItem formatearDisketeMenu = new JMenuItem();
   JMenuItem informacionEquipoMenu = new JMenuItem();
-  JMenuItem descargarFicheroMenu = new JMenuItem();
+ // JMenuItem descargarFicheroMenu = new JMenuItem();
   JMenuItem unidadesDeDiscoMenu = new JMenuItem();
   JMenu jMenu3 = new JMenu();
   JMenu jMenu4 = new JMenu();
@@ -191,11 +259,30 @@ TreeExpansionEvent au;
     jMenuItem1.setText("Listar Procesos");
     jMenuItem1.setIcon(iconoListProcess);
     jMenuItem1.addActionListener(new FrameCliente_ListaProcess_actionAdapter(this));
-    jMenuItem2.setText("Matar Procesos");
-    jMenuItem2.addActionListener(new FrameCliente_MataProcess_actionAdapter(this));
-    jMenuItem2.setIcon(iconoKillProcess);
+  //  jMenuItem2.setText("Matar Procesos");
+    //jMenuItem2.addActionListener(new FrameCliente_MataProcess_actionAdapter(this));
+    //jMenuItem2.setIcon(iconoKillProcess);
+
+
     jScrollPane1.getViewport().add(consola,null);
     //Shell.add(jScrollPane1,ShellCons);
+clear=new JButton();
+//clear.addActionListener(new FrameCliente_ListaProcess_actionAdapter(this));
+clear.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+
+                    System.out.println("LIMPIO ");
+                   clearshell();
+                    //adaptee.conectarRadioButton_actionPerformed(e);
+                
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+   clear.setIcon(iconoclear);
+    jScrollPane1.setCorner(JScrollPane.LOWER_RIGHT_CORNER,
+				clear);
+
 
      tabbedPane.addTab("Remota Shell", null, jScrollPane1,
                 "Does nothing");
@@ -216,7 +303,43 @@ TreeExpansionEvent au;
     ShellCons.insets=new java.awt.Insets(5,5,5,5);
     ShellCons.fill=ShellCons.HORIZONTAL;
     statusBar.setText("Inicializado en "+InetAddress.getLocalHost().getCanonicalHostName());
+     
     Shell.add(statusBar,ShellCons);
+
+   
+
+   //  JButton boton4 = new JButton ("Boton 4");
+//clear=new JButton();
+    /*constraints.gridx = 2;
+constraints.gridy = 2;
+constraints.gridwidth = 1;
+constraints.gridheight = 1;
+this.getContentPane().add (boton4, constraints); */
+
+
+
+//----    ShellCons = new GridBagConstraints();
+//---   ShellCons.gridx=1;
+//--   ShellCons.gridy=1;
+//--   ShellCons.gridwidth=1;
+ //---  ShellCons.gridheight=1;
+//----ShellCons.fill = GridBagConstraints.NONE;
+    /*ShellCons.weightx=0;
+    ShellCons.weighty=0.1;*/
+//---  ShellCons.fill=GridBagConstraints.SOUTHEAST;
+ //--- ShellCons.insets=new java.awt.Insets(1,1,5,2);
+  //deletedir= new JButton();
+  //deletedir.setSize(0,0);
+  //ButtName.setPreferredSize (nueva dimensión (buttonWidth, buttonHeight));
+ // clear.setPreferredSize(new Dimension(1,1));//.setPreferredSize(1,1);
+  //deletedir.setPressedIcon(borraDirectorio);
+  
+  //----  final int ICON_SIZE = 1;
+  //--- clear.setIcon(iconoclear);
+    
+  //--- Shell.add(clear,ShellCons);
+
+
 
 
 
@@ -245,7 +368,7 @@ TreeExpansionEvent au;
     conexionMenu.setHorizontalTextPosition(SwingConstants.TRAILING);
     conexionMenu.setIcon(conexion
                          );
-    setTitle("NetTools 0.7 Beta Administraci�n Remota"); //T�tulo del frame
+    setTitle("NetTools 0.7 Beta Administración Remota"); //T�tulo del frame
     conexionMenu.setText("Conexión");
     jMenu2.setActionCommand("Servicios");
     jMenu2.setIcon(services);
@@ -273,13 +396,13 @@ TreeExpansionEvent au;
         FrameCliente_formatearDisketeMenu_actionAdapter(this));
     informacionEquipoMenu.setIcon(informacionIcono);
     informacionEquipoMenu.setMargin(new Insets(2, 2, 2, 2));
-    informacionEquipoMenu.setText("Informaci�n Equipo");
-    informacionEquipoMenu.addActionListener(new
-        FrameCliente_informacionEquipoMenu_actionAdapter(this));
-    descargarFicheroMenu.setIcon(downloadsIcono);
-    descargarFicheroMenu.setText("Descargar Fichero");
-    descargarFicheroMenu.addActionListener(new
-        FrameCliente_descargarFicheroMenu_actionAdapter(this));
+    informacionEquipoMenu.setText("Información Equipo");
+     informacionEquipoMenu.addActionListener(new
+     FrameCliente_informacionEquipoMenu_actionAdapter(this));
+ //   descargarFicheroMenu.setIcon(downloadsIcono);
+    //descargarFicheroMenu.setText("Descargar Fichero");
+  //  descargarFicheroMenu.addActionListener(new
+   //     FrameCliente_descargarFicheroMenu_actionAdapter(this));
     unidadesDeDiscoMenu.setIcon(unidadesIcono);
     unidadesDeDiscoMenu.setText("Unidades de disco");
     unidadesDeDiscoMenu.addActionListener(new
@@ -412,12 +535,12 @@ TreeExpansionEvent au;
     jMenu2.add(formatearDisketeMenu);
     jMenu2.addSeparator();
     jMenu2.add(informacionEquipoMenu);
-    jMenu2.addSeparator();
-    jMenu2.add(descargarFicheroMenu);
+   // jMenu2.addSeparator();
+  //  jMenu2.add(descargarFicheroMenu);
     jMenu2.addSeparator();
     jMenu2.add(unidadesDeDiscoMenu);
-    jMenu2.addSeparator();
-    jMenu2.add(jMenu1);
+    //jMenu2.addSeparator();
+    //jMenu2.add(jMenu1);
     jMenu2.add(servidorTelnetMenu);
     jMenu4.add(servidorTelnetMenu);
     jMenu4.addSeparator();
@@ -429,8 +552,8 @@ TreeExpansionEvent au;
     jMenu5.add(imagenservidorMenu);
     jMenu5.addSeparator();
     jMenu5.add(jMenuItem1);
-    jMenu5.addSeparator();
-    jMenu5.add(jMenuItem2);
+ //   jMenu5.addSeparator();
+   // jMenu5.add(jMenuItem2);
     jMenu6.add(scanerPuertosMenu);
     jMenu6.addSeparator();
     jMenu6.add(scannerTroyanosMenu);
@@ -446,9 +569,9 @@ TreeExpansionEvent au;
     jMenu8.add(paginaPrincipalMenu);
     buttonGroup1.add(conectarRadioButton);
     buttonGroup1.add(desconectarRadioButton);
-    jMenu1.add(ListarDirectorioMenu);
-    jMenu1.add(directorioRemotoMenu);
-    jMenu1.add(borrarDirectorioMenu);
+   // jMenu1.add(ListarDirectorioMenu);
+    //jMenu1.add(directorioRemotoMenu);
+   // jMenu1.add(borrarDirectorioMenu);
   }
 
   public static void main(String[] args) {
@@ -505,6 +628,18 @@ TreeExpansionEvent au;
     consola.setText(texto);
   }
 
+  public void clearshell(){
+      System.out.println("Limpiamos CONSOLAAAA------>>>>>>");
+     String texto="ADOLFO    ES COJONUDO";
+    ejecutoDeComandos.ClearShell();
+     
+     //consola.setText(texto);
+     // mensageError(texto);
+      //statusBar.setText("Conectado a "+status);
+
+
+  }
+
   /**
    * Envia un mensage de error.
    *
@@ -559,6 +694,7 @@ public void StatusDesc(String desc)
                                          "conexión", JOptionPane.DEFAULT_OPTION,
                                          blockIcono, null, null);
     if (opcion == null) {
+       // System.out.println("Compruebo la ip");
       return;
     }
     try {
@@ -832,7 +968,7 @@ public void StatusDesc(String desc)
   void borrarDirectorioMenu_actionPerformed(ActionEvent e) {
     Object opcion;
     opcion = JOptionPane.showInputDialog(null,
-        "Atención!! Va usted a borrar directorios\nen la m�quina remota",
+        "Atención!! Va usted a borrar directorios\nen la máquina remota",
                                          "Borrar Directorio",
                                          JOptionPane.OK_OPTION, borraDirectorio, null, null);
 
@@ -848,18 +984,21 @@ public void StatusDesc(String desc)
   }
 
   void imagenservidorMenu_actionPerformed(ActionEvent e) {
-    try {
-      ejecutoDeComandos.recibirImagenServidor();
+      System.out.println("----[CLIENTE][imagenservidorMenu_actionPerformed] Inicio...");
+  try {
+        System.out.println("----[CLIENTE][imagenservidorMenu_actionPerformed] Llamando a EJECUTOR (ejecutoDeComandos.recibirImagenServidor)...");
+        ejecutoDeComandos.recibirImagenServidor();
     }
     catch (NuestraExeption ex) {
       JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
                                     JOptionPane.CLOSED_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE);
     }
-
+      //DON// MostrarImagen("Hola");
   }
 
   void descargarFicheroMenu_actionPerformed(ActionEvent e) {
+
     Object objeto = JOptionPane.showInputDialog(null,
                                                 "Nombre del archivo a descargar",
                                                 "Download Files",
@@ -867,7 +1006,8 @@ public void StatusDesc(String desc)
                                                 iconoDownload, null, null);
 
     try {
-      ejecutoDeComandos.abrirArchivoODirectorio(objeto.toString());
+         ejecutoDeComandos.recibirImagenServidor(objeto.toString());
+     // ejecutoDeComandos.abrirArchivoODirectorio(objeto.toString());
     }
     catch (NuestraExeption ex) {
       JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
@@ -907,6 +1047,9 @@ public void StatusDesc(String desc)
 
   }
 
+
+
+
   void ListaProcess_actionPerformed(ActionEvent e)
   {
 
@@ -945,7 +1088,7 @@ public void StatusDesc(String desc)
 
   void temasDeAyudaMenu_actionPerformed(ActionEvent e) {
     try {
-      Runtime.getRuntime().exec(new String[] {"winhlp32.exe", "NETTOOLS.HLP"});
+      Runtime.getRuntime().exec(new String[] {"winhlp32.exe", "C:/NETTOOLS.HLP"});
 
     }
     catch (Exception event) {
@@ -953,12 +1096,13 @@ public void StatusDesc(String desc)
                                     JOptionPane.CLOSED_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE);
     }
-  }
-
+  } 
+  
   void this_windowClosing(WindowEvent e) {
     System.exit(0);
+    contarr=0;
   }
-
+//se produce el evento de expandir el arbol
   public void ExpandirArbol(String Datosarbol)
   {
       int inicio = 0,fin=0,cont=0;
@@ -1002,17 +1146,27 @@ MutableTreeNode node3;
     // node2.removeAllChildren();
      System.out.println("Numero de hojos"+node2.getNextNode().getChildCount());
 System.out.println("QQQQQQQQQQQQQ"+Datosarbol);
-     if (Datosarbol.equalsIgnoreCase(aux+separador)){
+System.out.println("Numero de hojos----------->>>>>>>>"+node2.getChildCount());
+    /* if (Datosarbol.equalsIgnoreCase(aux+separador)){
     System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
    node2.getNextNode().removeAllChildren();
-     }
-    else
-    {
-     if (node2.getChildCount()==1 || node2.getChildCount()==0){
+     }*/
+if (node2.getChildCount()==1)
+{
+//   model.removeNodeFromParent(node.getNextNode());
+//node.removeAllChildren();
+   // else
+  //  {
+  //   if (node2.getChildCount()==1 || node2.getChildCount()==0){
      System.out.println("zzzzzzzzzzzzzzzzzzZZZZ"+node2.getLevel());
       //node2.remove(node2.getLevel()+1);
-     node2.removeAllChildren();
-     }
+     //node2.removeAllChildren();
+     //node2.getNextNode().removeAllChildren();
+    // model.removeNodeFromParent(node2.getNextNode());
+//----     node2.getNextNode().removeAllChildren();
+   // model.removeNodeFromParent(node2);
+    // node2.removeAllChildren();
+     //   }
       //top.removeAllChildren();
     //  model.reload();
 
@@ -1033,7 +1187,25 @@ System.out.println("QQQQQQQQQQQQQ"+Datosarbol);
              nieto = new DefaultMutableTreeNode(h);
              hijo.add(nieto);
          }
+     else{
+         System.out.println("ponemos icono en arbol");
+      // render.setLeafIcon(new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/word2.png")));
+     //  render.setLeafIcon(new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/excel.png")));
+        //ImageIcon iconoexcel= new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/excel.png"));
+         //render.setLeafIcon(iconoword);
+      // render.setLeafIcon(new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/word2.gif")));//.setLeafIcon(new ImageIcon("d:/fut));
+
+//         ext = name.substring(name.lastIndexOf('.') + 1, name.length());
+
+
+          }
+    
      model.insertNodeInto( (DefaultMutableTreeNode) hijo, (DefaultMutableTreeNode) node2, node2.getChildCount());
+  //    render.setLeafIcon(new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/excel.png")));
+     //render.setLeafIcon(new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/word2.png")));
+     //7iconoExit           ImageIcon
+      //ImageIcon iconoword = new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/word2.gif"));
+  //-----   render.setLeafIcon(new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/word2.gif")));
  //   hierarchy[cont]=(aux);
  //  System.out.println(hierarchy[cont] + "bucle");
     //System.out.println(aux+"aux");
@@ -1041,7 +1213,7 @@ System.out.println("QQQQQQQQQQQQQ"+Datosarbol);
         inicio=fin+2;
         cont++;
     }
-  }
+ // }
 
       /*System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYyyyyyyy3333333333333333333");
         
@@ -1127,7 +1299,7 @@ JTree tree = new JTree(Modeltree);
 this.repaint();
       //this.treeExpanded();
 */
-
+}
   }
 
 
@@ -1158,9 +1330,251 @@ public void NuevaPesta(String Datosarbol) throws Exception{
 */
         //this.setLayout(new BorderLayout());
         panel2.setLayout(new BorderLayout());
+        panelbotonArbol  =   new JPanel();
+        Container container = this.getContentPane();
+      //  panelbotonArbol.setLayout(new FlowLayout(FlowLayout.RIGHT,40,40));
+          panelbotonArbol.setLayout(new GridLayout(4,1,20,20));
+         // panelbotonArbol.setBorder(javax.swing.BorderFactory.createTitledBorder("menu opciones"));
+         panelbotonArbol.setBorder(javax.swing.BorderFactory.createTitledBorder(null,"Operaciones d"));
+        deletedir= new JButton();
+        deletedir.setIcon(borraDirectorio);
+        deletedir.setText("Borrar directorio");
+        deletedir.addActionListener (
+        new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[Borrando][Fichero del arbol].borrar: 1");
+                   //Strin rutacompleta="";
+     System.out.println("La ruta completa  a listar que vamos eliminnNNNNNNNNNNNNar: "+rutacompleta2);
+
+                      javax.swing.tree.TreePath rutaNodoSeleccionado = treeDir.getSelectionPath();
+                    if (rutaNodoSeleccionado==null){
+                          JOptionPane.showConfirmDialog(null, "Debe seleccionar el elemento que desea eliminar", "Delete Process",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.WARNING_MESSAGE); return;}
+
+                      DefaultMutableTreeNode nodoSeleccionado=(DefaultMutableTreeNode)
+                     rutaNodoSeleccionado.getLastPathComponent();
+
+                      if (nodoSeleccionado.isRoot())return;
+                    JPanel frame=new JPanel();
+                    int n = JOptionPane.showConfirmDialog(null,
+                    "Confirma que desea eliminar " + nodoSeleccionado.toString() +" ?",
+                    "Seleccione opcion para continuar",
+                    JOptionPane.YES_NO_OPTION);
+                   if (n==1){//cancela la eliminacion
+                        System.out.println("Confirmado cancelación");
+                        JOptionPane.showConfirmDialog(null,"Interrumpido proceso de eliminacion", "Eliminación cancelada",
+                                                                JOptionPane.CLOSED_OPTION,
+                                                                JOptionPane.INFORMATION_MESSAGE);
+                   }else{    //comienza la eliminación del archivo
+                      DefaultTreeModel modeloArbol=
+                         (DefaultTreeModel)treeDir.getModel();
+                          modeloArbol.removeNodeFromParent(nodoSeleccionado);
+
+
+                            try {
+                                  ejecutoDeComandos.borrarDirectorio(rutacompleta2);
+                               }
+                                catch (NuestraExeption ex) {
+                                  JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
+                                                                JOptionPane.CLOSED_OPTION,
+                                                                JOptionPane.INFORMATION_MESSAGE);
+                                }
+                   }
+                  }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+
+        deletefile=new JButton();
+        deletefile.setIcon(borraDirectorio);
+        deletefile.setText("Borrar fichero ");
+
+        deletefile.addActionListener (
+        new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[Borrando][Fichero del arbol].borrar: 1");
+                   //Strin rutacompleta="";
+
+     System.out.println("La ruta completa  a listar que vamos eliminnNNNNNNNNNNNNar: "+rutacompleta2);
+                    /*Object objeto = JOptionPane.showInputDialog(null,
+                                                "Nombre del archivo a descargar",
+                                                "Download Files",
+                                                JOptionPane.YES_NO_OPTION,
+                                                iconoDownload, null, null);*/
+
+    /*try {
+      //ejecutoDeComandos.abrirArchivoODirectorio(objeto.toString());
+      ejecutoDeComandos.recibirImagenServidor(objeto.toString());
+    }
+    catch (NuestraExeption ex) {
+      JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+    }*/
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+
+
+        download=new JButton();
+        download.setIcon(downloadsIcono);
+        download.setText("Descargar Fichero");
+
+          download.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[CLIENTE][MostrarImagen2].save: 1");
+                       
+                  //obtenemo la ruta del fichero a listar
+                 javax.swing.tree.TreePath rutaNodoSeleccionado = treeDir.getSelectionPath();
+                    if (rutaNodoSeleccionado==null){
+                          JOptionPane.showConfirmDialog(null, "Debe seleccionar el elemento que desea descargar", "download Process",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.WARNING_MESSAGE); return;}
+
+                    System.out.println("la ruta selecciona es:--------[rutaNodoSeleccionado]"+rutaNodoSeleccionado.toString());
+                    //Object objeto =treeDir.getSelectionPath();
+
+                     TreePath path=treeDir.getSelectionPath();
+                    /******************************************/
+
+                /*     rutacompleta2="";
+                    Object [] nodos3 = path.getPath();
+         System.out.print("Path seleccionado: ");
+         int cont=0;
+		for (Object nodo3: nodos3){
+		  if (cont>2)
+                      rutacompleta2+=nodo3.toString()+"/";
+                  else{
+                    rutacompleta2+=nodo3.toString()+"/";
+                    cont++;
+                    }
+
+		System.out.println("++++++++++++"+rutacompleta2);
+                }
+             int n=nodos3.length;
+             System.out.println("AAAAA BIENNNNN"+nodos3[n-1].toString());
+                System.out.println("ruta del nodo a descargar---->: "+rutacompleta2);
+*/
+   DefaultMutableTreeNode nodoSeleccionado=(DefaultMutableTreeNode)
+                     rutaNodoSeleccionado.getLastPathComponent();
+
+
+   Object[] options = {"Si, descarga",
+                       "No, descarge!"};
+   int n = JOptionPane.showOptionDialog(null,
+    "Confirma que desea descargar el fichero " + nodoSeleccionado.toString() +" ?",
+    "Download Files",
+    JOptionPane.YES_NO_OPTION,
+    JOptionPane.QUESTION_MESSAGE,
+    iconoDownload,     //do not use a custom Icon
+    options,  //the titles of buttons
+    options[0]); //default button title
+
+   
+   
+   
+   
+   /*   int n = JOptionPane.showConfirmDialog(null,
+                   "Interrumpido proceso de eliminacion", "Eliminación cancelada",
+                                                               // JOptionPane.CLOSED_OPTION,
+                                                                JOptionPane.YES_NO_OPTION,
+                   //"Confirma que desea eliminar " + nodoSeleccionado.toString() +" ?",
+                   // "Seleccione opcion para continuar",
+                   // JOptionPane.YES_NO_OPTION,
+                     iconoDownload);
+
+                   if (n==1){//cancela la eliminacion
+                        System.out.println("Confirmado cancelación");
+                        JOptionPane.showConfirmDialog(null,"Interrumpido proceso de eliminacion", "Eliminación cancelada",
+                                                                JOptionPane.CLOSED_OPTION,
+                                                                JOptionPane.INFORMATION_MESSAGE,
+                                                                iconoDownload);
+                   }else{    //comienza la eliminación del archivo
+
+*/
+
+
+
+
+                    //System.out.println("EL pad es el siguiente" + objeto.toString());
+             /*     Object objeto = JOptionPane.showInputDialog(null,
+                                                "Nombre del archivo a descargar",
+                                                "Download Files",
+                                                JOptionPane.YES_NO_OPTION,
+                                                iconoDownload, null, null);
+
+               */
+
+
+
+    try {
+      //ejecutoDeComandos.abrirArchivoODirectorio(objeto.toString());
+      ejecutoDeComandos.recibirImagenServidor2(rutacompleta2);
+    }
+    catch (NuestraExeption ex) {
+      JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+    }
+  //              }
+            } // clase interna anónima
+          }
+                ); // Finalizar llamada para addActionListener
+        
+
+    closePestaña=new JButton("Cerrar pestana");
+     closePestaña.setIcon(iconoExit);
+     closePestaña.addActionListener (
+           new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[Cerrando][Pestaña del arbol].Cerrar : 1");
+                    //Strin rutacompleta="";
+                 //int i = panel2..indexOfTabComponent(this);
+                 //if (i != -1) {
+                  //panel2.remove(0);
+                 panel2.removeAll();
+                 panelbotonArbol.removeAll();
+                  tabbedPane.remove(1);
+
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+
+        panelbotonArbol.add(deletedir,BorderLayout.BEFORE_LINE_BEGINS);
+        panelbotonArbol.add(deletefile,BorderLayout.BEFORE_FIRST_LINE);
+        panelbotonArbol.add(download,BorderLayout.AFTER_LAST_LINE);
+        panelbotonArbol.add(closePestaña,BorderLayout.AFTER_LAST_LINE);
+
+
 
         /** Que tan grandes son los iconos que voy a mostrar en la lista */
         final int ICON_SIZE = 32;
+
+        /*
+        panel3.add(boton3, BorderLayout.WEST);
+        panel3.add(boton2, BorderLayout.EAST);
+        panel3.add(boton, BorderLayout.SOUTH);
+        //     container.add(boton,BorderLayout.EAST);
+        container.add(panel3);
+        //panel3.add(container);
+
+        boton3.addActionListener(
+                new ActionListener() {
+
+*/
+
+
+
+
+
+
+
+
+
 
         /**
          * Creo un nuevo File, el constructor que estoy utilizando me permite
@@ -1194,8 +1608,6 @@ public void NuevaPesta(String Datosarbol) throws Exception{
     aux=Datosarbol.substring(inicio, fin);
     hierarchy[cont]=(aux);
    System.out.println(hierarchy[cont] + "bucle");
-    //System.out.println(aux+"aux");
-   // System.out.println(inicio +"inicio" + fin +"fin");
         inicio=fin+2;
         cont++;
     }
@@ -1206,11 +1618,13 @@ public void NuevaPesta(String Datosarbol) throws Exception{
                    /*
              category = new DefaultMutableTreeNode(roots[i]);
              top.add(category);*/
-               
-
-
-
-
+      /*
+     MiRendererDeArbol nuevorender=new MiRendererDeArbol();
+   treeDir.setCellRenderer(nuevorender);//.setCellRenderer( new MiRendererDeArbol() );
+*/
+      /* java1415 s= new java1415();
+       treeDir.setCellRenderer();
+*/
 
 
          treeDir = new JTree(processHierarchy(hierarchy));
@@ -1221,8 +1635,9 @@ public void NuevaPesta(String Datosarbol) throws Exception{
          * la pantalla
          */
 
-
-        // treeDir.setCellRenderer(new DirectoryRenderer(ICON_SIZE));
+         //CustomIconRenderer=new
+         treeDir.setCellRenderer(new CustomIconRenderer());
+        //treeDir.setCellRenderer(new DirectoryRenderer(ICON_SIZE));
 
 
         /**
@@ -1242,6 +1657,21 @@ public void NuevaPesta(String Datosarbol) throws Exception{
          * corra lento.
          */
         treeDir.addTreeExpansionListener(this);
+        treeDir.getSelectionModel().setSelectionMode
+                (TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+        // Indicamos que el árbol va a estar controlado por nuestra aplicación
+    // y que el sistema nos debe dejar el campo libre
+    //   treeDir.setCellRenderer(new MiRendererDeArbol());
+
+       // DefaultTreeCellRenderer
+
+    //  tree.setCellRenderer(new MiRender());
+
+
+/*      DefaultTreeCellRenderer render= (DefaultTreeCellRenderer)treeDir.getCellRenderer();
+render.setLeafIcon(new ImageIcon(net.javahispano.nettools.cliente.UI.FrameCliente.class.getResource("iconos/word2.png")));
+*/
         /**
          * Utilizo un JScrollPane para que aparezcan barras de desplazamiento
          */
@@ -1268,12 +1698,15 @@ public void NuevaPesta(String Datosarbol) throws Exception{
         scrlFiles.setVerticalScrollBarPolicy(
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
        // getContentPane().add(scrlFiles, BorderLayout.CENTER);
- //---        panel2.add(scrlFiles, BorderLayout.CENTER);
+         panel2.add(panelbotonArbol,BorderLayout.CENTER);
+        //---------       panel2.add(scrlFiles, BorderLayout.CENTER);
      //   panel2.pack();
      //   panel2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       //  panel2.setTitle("Arbol");
         panel2.setVisible(true);
         
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
 
          tabbedPane.addTab("Listado Directorios",null,panel2,
                 "Does nothing");
@@ -1308,13 +1741,23 @@ return(node1);
   }
 */
 
-
-
-
+/*
+ hijo = new DefaultMutableTreeNode(aux);
+     //model.insertNodeInto( (DefaultMutableTreeNode) hijo, (DefaultMutableTreeNode) node2, node2.getChildCount());
+     if (esdirectorio.endsWith("1")){
+        //     System.out.println("creo un hijo");
+             nieto = new DefaultMutableTreeNode(h);
+             hijo.add(nieto);
+         }
+*/
 private DefaultMutableTreeNode processHierarchy(Object[] hierarchy) {
     System.out.println("DDEEEEDDDDDDD"+hierarchy.length);
-  /*  DefaultMutableTreeNode node1 =
+ String h="";
+    /*  DefaultMutableTreeNode node1 =
       new DefaultMutableTreeNode(hierarchy[0]);*/
+ DefaultMutableTreeNode nieto=null;
+    DefaultMutableTreeNode aux =
+      new DefaultMutableTreeNode(" ");
     DefaultMutableTreeNode node1 =
       new DefaultMutableTreeNode("/");
     DefaultMutableTreeNode child;
@@ -1322,10 +1765,16 @@ private DefaultMutableTreeNode processHierarchy(Object[] hierarchy) {
         System.out.println(hierarchy[i] + "ESTOooooooooooooooooooooooooooooooooo");
       Object nodeSpecifier = hierarchy[i];
       if (nodeSpecifier instanceof Object[])  // Ie node with children
-        child = processHierarchy((Object[])nodeSpecifier);
-      else
+      { child = processHierarchy((Object[])nodeSpecifier);
+        System.out.println("AKKKKK111111");}
+      else{
+          System.out.println("AKKKKK222222222");
         child = new DefaultMutableTreeNode(nodeSpecifier); // Ie Leaf
-      node1.add(child);
+        nieto = new DefaultMutableTreeNode(h);
+         child.add(nieto);
+         }
+        node1.add(child);
+
     }
     return(node1);
   }
@@ -1358,10 +1807,10 @@ return contador;
          System.out.print("Path seleccionado: ");
          int cont=0;
 		for (Object nodo3: nodos3){
-		  if (cont>1)
+		  if (cont>2)
                       rutacompleta+=nodo3.toString()+"/";
                   else{
-                    rutacompleta+=nodo3.toString();
+                    rutacompleta+=nodo3.toString()+"/";
                     cont++;
                     }
 
@@ -1370,12 +1819,14 @@ return contador;
              int n=nodos3.length;
              System.out.println("AAAAA BIENNNNN"+nodos3[n-1].toString());
                 System.out.println("La ruta completa  a listar es: "+rutacompleta);
-           DefaultMutableTreeNode node =
+           /*DefaultMutableTreeNode node =
                 (DefaultMutableTreeNode) treeDir.getLastSelectedPathComponent();
         System.out.println("forma Nueva quedaria"+node.getUserObjectPath().toString());
-           au=event;
+        au=event;
+       System.out.println("En el momento clik"+node.toString());
         System.out.println("En el momento Expandir"+node.toString());
-        nodeArbol=node;
+        //nodeArbol=node;
+        nodeArbol=node.toString();*/
         prefix = nodos3[n-1].toString();
         try {
             ejecutoDeComandos.listarDirectorio(rutacompleta);
@@ -1428,409 +1879,308 @@ try {
 
      public void valueChanged(TreeSelectionEvent e) {
    
-         String rutacompleta="";
+         
          TreePath path = e.getPath();
 	 Object [] nodos3 = path.getPath();
          System.out.print("Path seleccionado: ");
          int cont=0;
+         rutacompleta2="";
 		for (Object nodo3: nodos3){
 		  if (cont>1)
-                      rutacompleta+=nodo3.toString()+"/";
+                      rutacompleta2+=nodo3.toString()+"/";
                   else{
-                    rutacompleta+=nodo3.toString();
+                    rutacompleta2+=nodo3.toString();
                     cont++;
                     }
                      
-		System.out.println("+++Cmbiaaaa+++++"+rutacompleta);
+		System.out.println("+++Cmbiaaaa+++++"+rutacompleta2);
                 }
-            System.out.println("La ruta completa  a listar es: "+rutacompleta);
-           DefaultMutableTreeNode node =
+            System.out.println("La ruta completa  a listar es1111111: "+rutacompleta2);
+           /*DefaultMutableTreeNode node =
                 (DefaultMutableTreeNode) treeDir.getLastSelectedPathComponent();
         auxx=e;
         System.out.println("En el momento clik"+node.toString());
         nodeArbol=node;
         prefix = nodeArbol.toString();
+        /*
         try {
             ejecutoDeComandos.listarDirectorio(rutacompleta);
         } catch (NuestraExeption ex) {
             Logger.getLogger(FrameCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
+      */
         }
+
 
     public void mensageListarProcesos(String Listaprocesos) {
      // Listaprocesos=Listaprocesos.replaceAll(">#","\n");
         Listar(Listaprocesos);
+        //actualiza lista
     }
 
-public void  Listar(String procesos){
-    int inicio=0,fin=0;
-String separador=">#";
+   public void ActualizarmensageListarProcesos(String Listaprocesos) {
+     // Listaprocesos=Listaprocesos.replaceAll(">#","\n");
+
+
+    }
+    public void mensageActualizarListarProcesos(String listaprocesos) {
+        //actualiza lista de procesos
+     ActualizaLista(listaprocesos);
+
+
+
+
+
+    }
+
+
+   public void  ActualizaLista(String Listaprocesos){
+      ModeloTabla model=new  ModeloTabla(Listaprocesos);
+       System.out.println("LLLLLLLLLLLLLLLLLLLLTTTTTTTTTTTTTTTTTTTTTTTTTTTTAAAAA");
+        ModeloTabla model1=new  ModeloTabla(Listaprocesos);
+         DefaultTableModel modelll=new DefaultTableModel(model1.getData(),model1.getColumnNames());
+         table.setModel(modelll);
+         //DefaultTableModel mo=(DefaultTableModel) table.getModel();//setModel(model.getData(),model.getColumnNames());// = new JTable(model.getData(),model.getColumnNames());
+         //mo.setDataVector(model.getData(),model.getColumnNames());
+        // table = new JTable(model.getData(),model.getColumnNames());
+ //     DefaultTableModel mo=new DefaultTableModel(model.getData(),model.getColumnNames());
+//      table.setModel(mo);
+        //table = new JTable(model.getData(),model.getColumnNames());
+        //table.setModel((TableModel) model);
+       // table.repaint();
+       // paneltablaproces.repaint();
+       // panelprocesos.repaint();
+        //paneltablaproces.d
+
+   }
+
+
+//JDialog panelprocesos = new JDialog(this);
+
+    public void Listar(String procesos) {
+        int inicio = 0, fin = 0;
+        String separador = ">#";
+        final JDialog panelprocesos = new JDialog(this);
+    //  panelprocesos = new JDialog(this);
+      setDefaultCloseOperation (javax.swing.WindowConstants.DISPOSE_ON_CLOSE); 
 //final JDialog  panelprocesos = null;
-final JDialog panelprocesos = new JDialog(this);
+       // final
 //Le pido al Frame su objeto contenedor
 //Container contentpane = getContentPane();
 //Creo un objeto de tipo JPanel
 //JPanel panel = new JPanel();
 //Añado el panel en el objeto contenedor del frame
-
-
-
-
-
-
-//JPanel panel3=new JPanel ();
-   // DefaultListModel modelo = new DefaultListModel();
-    DefaultTableModel modelo1 = new DefaultTableModel();
-
-//JTable tabla = new JTable (modelo);
-
-
- String aux;
-    //System.out.println("procesos.length()"+procesos.length());
-    int total=NumeroDeSubdirectorios(procesos,separador);
-    //System.out.println("total"+total);
-    //int total=97;
-
-            // while(inicio<procesos.length()){
-            int cont=0;
-
-    //modelo.setValueAt (fila, columna, persona.apellido);
-    //columna++;
-
-    String[] columnNames = {"Nombre de imagen", "Pid", "Nombre de sesion",
-                                   "CPU", "Uso de memoria"};
-
-    Object[][] data=new Object[total-3][5];
-   
-
-String cadena1="";
- int estado=0;
-int filas=0,columnas=0;
-String campo1="";String campo2="";String campo3="";String campo4="";String campo5="";
-  char anterior =' ',siguiente=' ';
-int blancos=0;
-
-int i;
-int contador=0;
-    System.out.println(procesos);
-/*fin=procesos.indexOf(separador,inicio);
-
-    inicio=procesos.indexOf(separador,100);
-    fin=procesos.indexOf(separador,inicio);
-    inicio=procesos.indexOf(separador,fin);
-    fin=procesos.indexOf(separador,inicio);*/
-
-    fin=procesos.indexOf(separador,0);
-
-    System.out.println("comienzo encontrado1  "+fin);
-    inicio=procesos.indexOf(separador,fin+2);
-    System.out.println("comienzo encontrado2  "+inicio);
-    fin=procesos.indexOf(separador,inicio+2);
-    System.out.println("comienzo encontrado3  "+fin);
-   //inicio=procesos.indexOf(separador,fin+2);
-    inicio=fin+2;
-    //System.out.println("comienzo encontrado4  "+inicio);
-
-    System.out.println("El total sssss"+total);
-while(filas<total-3){//total-4
-     fin=procesos.indexOf(separador,inicio);
-     //System.out.println("inicio"+inicio+ "FIN"+fin);
-    aux=procesos.substring(inicio, fin);
-    blancos=0;
-    columnas=4;
-    contador=0;
-    System.out.println("AAAAAA33 y aux.leng"+aux +aux.length());
-    for(int j=aux.length()-1;j>0;j--)
-     {
-         System.out.println("aux.charAt(j)"+aux.charAt(j));
-    if (estado==0){
-        System.out.println("Estamos en el estado 0");
-        if (aux.charAt(j)==' '){
-            blancos++;
-
-         if (blancos==2)
-         {
-
-             System.out.println("Campo4"+campo1);
-            data[filas][columnas]=VueltaCadena(campo1);
-           campo1=" ";
-  //      modelo1.setValueAt (filas, columnas,'');
-         columnas--;
-          estado=1;
-         }
-         else
-             campo1+=aux.charAt(j);
-           anterior=aux.charAt(j);
-          // siguiente=aux.charAt(filas+1);
-
-        }
-         else
-          // blancos++;
-         campo1+=aux.charAt(j);
-         //cadena1+=procesos.charAt(filas);
-       //anterior=procesos.charAt(filas);
-       //siguiente=procesos.charAt(filas+1);
-
-      }
-       if (estado==1)//campo 2
-       {
-         System.out.println("Estamos en el estado 1");
-          if ((aux.charAt(j)==' ')&&(anterior!=' ')){
-              System.out.println("Campo3"+campo1);
-              data[filas][columnas]=VueltaCadena(campo1);
-           campo1=" ";
-           contador++;
-  //       modelo1.setValueAt (filas, columnas,'');
-         columnas--;
-         if (contador==3){
-             System.out.println("salimos estado 2");
-             estado=2;
-             campo1="";
-         }
-          }
-          if (aux.charAt(j)!=' '){
-              System.out.println("Concat"+aux.charAt(j));
-            campo1+=aux.charAt(j);
-
-          }
-
-            anterior=aux.charAt(j);
-       }
-       if(estado==2)//ultimo campo
-       {
-           System.out.println("Estamos en el estado 2");
-       if ((aux.charAt(j)==' ')&&(anterior!=' ')){
-
-       }
-       else{
-
-        campo1+=aux.charAt(j);
-       if (j==1){
-          
-           campo1+=aux.charAt(j-1);
-           System.out.println("Acaba volvemos estado inicial"+campo1);
-          data[filas][columnas]=VueltaCadena(campo1);
-           campo1=" ";
-        estado=0;
-
-            }
-          }
-        }
-    }
-     //System.out.println("Campo1"+campo1);
-     filas++;
-     
-     //modelo.addElement(aux);
-        inicio=fin+2;
-        cont++;
-
-    }
-
-
 //    final JTable table = new JTable(data, columnNames);
-    final JTable table = new JTable(data, columnNames);
-    table.setAutoCreateRowSorter(true);
-    table.setPreferredScrollableViewportSize(new Dimension(500,300));
+         ModeloTabla model1=new  ModeloTabla(procesos);
+         DefaultTableModel model=new DefaultTableModel(model1.getData(),model1.getColumnNames());
+         //table = new JTable(model.getData(),model.getColumnNames());
+          table = new JTable(model);
+         table.setAutoCreateRowSorter(true);
+        table.setPreferredScrollableViewportSize(new Dimension(580,325));
 
 
         //Creamos un JscrollPane y le agregamos la JTable
         JScrollPane scrollPane = new JScrollPane(table);
 
         //Agregamos el JScrollPane al contenedor
-       // getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-
-
-
-
-
-   /*
-       //lista.setModel(modelo);
-   lista = new JList(modelo);
-   // lista.setPreferredSize(new Dimension(300, 400));
-   lista.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-  // lista.setLayoutOrientation(JList.VERTICAL_WRAP);
-    //lista.setSelectionMode (ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    lista.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION );
-
-
-    lista.setVisibleRowCount(-1);
-   lista.setVisible(true);
-    scrlFiles = new JScrollPane(lista);
-    scrlFiles.setPreferredSize (new Dimension(400,400));*/
-  /*  scrlFiles.setVerticalScrollBarPolicy(
-   ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);//.HORIZONTAL_SCROLLBAR_ALWAYS);
-    */   // getContentPane().add(scrlFiles, BorderLayout.CENTER);
+        // getContentPane().add(scrollPane, BorderLayout.CENTER);
 //         panel3.add(scrollPane, BorderLayout.SOUTH);
 
-        JPanel panel3=new JPanel ();
-
-        Container container = this.getContentPane();
-        panel3.setLayout(new BorderLayout(1,1));
+    //....    JPanel panel3 = new JPanel();
+        
+      //  Container container = this.getContentPane();
+     //     Container container = panel3.getCon.getContentPane();
+        panel3.setLayout(new BorderLayout(1, 0));
+        paneltablaproces.setLayout(new BorderLayout(1,0));
 //((BorderLayout) container.getLayout()).setHgap(2);
 //((BorderLayout) container.getLayout()).setVgap(2);
 //panel3.setLayout(borderLayout);
 
 
 //container.add(button, borderConsts[i]);
-panel3.add(scrollPane,BorderLayout.NORTH);
+      //-----------  panel3.add(scrollPane, BorderLayout.NORTH);
+
+        paneltablaproces.add(scrollPane, BorderLayout.NORTH);
 
 
 
 
-
-       // panel3.add(scrollPane);
-panel3.add(scrollPane,BorderLayout.NORTH);
+        // panel3.add(scrollPane);
+      //  panel3.add(scrollPane, BorderLayout.NORTH);
 //container.add(scrollPane,BorderLayout.NORTH);
         JButton boton = new JButton("Terminar proceso");
-        JButton boton2 = new JButton("Refrescar proceso");
+       // jMenuItem2.setIcon(iconoKillProcess);
+       boton.setIcon(iconoKillProcess);
+        JButton brefresh = new JButton("Refrescar proceso");
+        brefresh.setIcon(iconorefresh);
         JButton boton3 = new JButton("Cancelar");
+        boton3.setIcon(iconoExit);
 
-panel3.add(boton3,BorderLayout.WEST);
-panel3.add(boton2,BorderLayout.EAST);
-panel3.add(boton,BorderLayout.SOUTH);
-   //     container.add(boton,BorderLayout.EAST);
-container.add(panel3);
- //panel3.add(container);
+        panel3.add(boton3, BorderLayout.WEST);
+        panel3.add(brefresh, BorderLayout.EAST);
+        panel3.add(boton, BorderLayout.SOUTH);
+        //     container.add(boton,BorderLayout.EAST);
+        //container.add(panel3);
+        //panel3.add(container);
 
- boton3.addActionListener (
+        boton3.addActionListener(
+                new ActionListener() {
 
-         new ActionListener () {
+                    public void actionPerformed(ActionEvent e) {
+                        //System.out.println("Cerrar Ventana");
 
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Cerrar Ventana");
-
-     try
-     {
-
-    panelprocesos.dispose();
-     }
-    catch(Exception event)
-    {
-      JOptionPane.showConfirmDialog(null, "La venta de procesos no se puede cerrar", "Close Windows",
+                        try {
+                          // panelprocesos.DISPOSE_ON_CLOSE
+                           // prueba JPanel.removeAll()
+                            panel3.removeAll();
+                            paneltablaproces.removeAll();
+                            //panelprocesos.setVisible(false);
+                            panelprocesos.dispose();
+                           
+                           
+                        } catch (Exception event) {
+                            JOptionPane.showConfirmDialog(null, "La venta de procesos no se puede cerrar", "Close Windows",
                                     JOptionPane.CLOSED_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE);
 
-              };
+                        }
+                        ;
 
-            }
-         } // clase interna anónima
-         //la clase interna anónima
-      ); // Finalizar llamada para addActionListener
-
-
-
+                    }
+                } // clase interna anónima
+                //la clase interna anónima
+                ); // Finalizar llamada para addActionListener
 
 
 
-  boton2.addActionListener (
 
-         new ActionListener () {
 
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Actualizando procesos");
-               
-     try
-     {
 
-        panelprocesos.dispose();
-        ejecutoDeComandos.ListarProcesos();
-     }
-    catch(Exception event)
-    {
-      JOptionPane.showConfirmDialog(null, "Error,no se pudo Listar procesos", "error list process",
+        brefresh.addActionListener(
+                new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+                        //System.out.println("Actualizando procesos");
+
+                        try {
+
+                            //panelprocesos.dispose();
+                            ejecutoDeComandos.ListarProcesos(1);
+                        } catch (Exception event) {
+                            JOptionPane.showConfirmDialog(null, "Error,no se pudo Listar procesos", "error list process",
                                     JOptionPane.CLOSED_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE);
 
-              };
+                        }
+                        ;
 
-            }
-         } // clase interna anónima
-         //la clase interna anónima
-      ); // Finalizar llamada para addActionListener
+                    }
+                } // clase interna anónima
+                //la clase interna anónima
+                ); // Finalizar llamada para addActionListener
 
-         boton.addActionListener (
+        boton.addActionListener(
+                new ActionListener() {
 
-         new ActionListener () {
+                    public void actionPerformed(ActionEvent e) {
+                        int contador = 0;//    throw new UnsupportedOperationException("Not supported yet.");
 
-            public void actionPerformed(ActionEvent e) {
-            int contador=0;//    throw new UnsupportedOperationException("Not supported yet.");
-            
-                //Object[] seleccionado=lista.getSelectedValues();
+                        Object[] options = {"Si, Terminar proceso",
+                                            "No, Terminar proceso",
+                                            };
 
-                // Object [] seleccionado=(Object[])(Object) table.getSelectedRows();
-
-            int [] seleccionado=table.getSelectedRows();
-            int cont=0;
-            String  allpid="";
-            String separador = ">#";
-         if (table.getSelectedRowCount()==0){
-                    System.out.println("Debe seleccionar algun proceso");
-         JOptionPane.showConfirmDialog(null, "Debe seleccionar el proceso que desea Terminar", "Kill Process",
-                                    JOptionPane.CLOSED_OPTION,
-                                    JOptionPane.INFORMATION_MESSAGE);
-         
-         }
-            while(seleccionado.length-1>=cont)
-            {
-                System.out.println("Seleccionado " + table.getValueAt(seleccionado[cont],1).toString());
-               allpid+=table.getValueAt(seleccionado[cont],1).toString()+separador;
-                cont++;
-            }
-      try
-     {
-      ejecutoDeComandos.KillProcesos(allpid.toString());
-     }
-    catch(Exception event)
-    {
-      JOptionPane.showConfirmDialog(null, "El Proceso no se puede matar", "Kill Process",
+                        int[] seleccionado = table.getSelectedRows();
+                        int cont = 0;
+                        String allpid = "";
+                        String separador = ">#";
+                        if (table.getSelectedRowCount() == 0) {
+                            JOptionPane.showConfirmDialog(null, "Debe seleccionar el proceso que desea Terminar", "Kill Process",
                                     JOptionPane.CLOSED_OPTION,
                                     JOptionPane.INFORMATION_MESSAGE);
 
-              };
-
-            }
-         } // clase interna anónima
-         //la clase interna anónima
-      ); // Finalizar llamada para addActionListener
-
-
-
-      panel3.add(boton);
-//((Frame) ventanaPadre
-//panelprocesos = new JDialog(this);
-panelprocesos.setModal(true);
-panelprocesos.setTitle("Lista de procesos");
-Container contentPane = panelprocesos.getContentPane();
-contentPane.add(panel3, BorderLayout.CENTER);
-panelprocesos.pack();
-panelprocesos.setSize(new Dimension(600, 400));
-panelprocesos.setLocationRelativeTo(this);
+                        }
+                        else{
+                           int n = JOptionPane.showOptionDialog(null,
+                            "Si mata algun proceso importante!!!. El sistema puede verse afectado \n"
+                            + "¿ Esta seguro que desea Terminar los proceso seleccionados ?",
+                            "Atención",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.WARNING_MESSAGE,
+                            null,
+                            options,
+                            options[1]);
 
 
-//frameCliente.setLocationRelativeTo(null)
+                       if(n==0){
+                        while (seleccionado.length - 1 >= cont) {
+                            //System.out.println("Seleccionado " + table.getValueAt(seleccionado[cont], 1).toString());
+                            allpid += table.getValueAt(seleccionado[cont], 1).toString() + separador;
+                            cont++;
+                        }
+                        try {
+                            ejecutoDeComandos.KillProcesos(allpid.toString());
+                           Thread.sleep(1000); 
+                           // panelprocesos.dispose();
+                            ejecutoDeComandos.ListarProcesos(1);
 
-panelprocesos.show();
+
+                        } catch (Exception event) {
+                            JOptionPane.showConfirmDialog(null, "El Proceso no se puede matar", "Kill Process",
+                                    JOptionPane.CLOSED_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+                        };
+
+                       }
+                        }
+
+                    }
+                } // clase interna anónima
+                //la clase interna anónima
+                ); // Finalizar llamada para addActionListener
+
+
+
+        panel3.add(boton);
+
+//   problema la refrescar consola ------>>>   panelprocesos.setModal(true);
+        panelprocesos.setTitle("Lista de procesos");
+       Container contentPane2 = panelprocesos.getContentPane();
+       //  Container contentPane2 = this.getContentPane();
+        contentPane2.add(paneltablaproces, BorderLayout.NORTH);
+       contentPane2.add(panel3, BorderLayout.SOUTH);
+      //panelprocesos.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        panelprocesos.setSize(new Dimension(650, 500));
+       
+        panelprocesos.pack();
+        panelprocesos.setLocationRelativeTo(this);
+        //contentPane2.setVisible(true);
+        //frameCliente.setLocationRelativeTo(null)
+     panelprocesos.setVisible(true);
+     
+    // contentPane2.show();
+    // contentPane2.setVisible(true);
+     //panelprocesos.sh
+     // panelprocesos.show();
         // lstFiles.setCellRenderer(new FileRenderer(ICON_SIZE));
 
 
 
 
 
-/*
-JTree tree22 = new JList(node);
+        /*
+        JTree tree22 = new JList(node);
         JFrame v = new JFrame();
         JScrollPane scroll = new JScrollPane(tree22);
         v.getContentPane().add(scroll);
         v.pack();
         v.setVisible(true);
-   //   this.ExpandirArbol(node);
+        //   this.ExpandirArbol(node);
 
-*/
-}
+         */
+    }
 
 
 public String VueltaCadena(String sCadena){
@@ -1842,7 +2192,7 @@ public String VueltaCadena(String sCadena){
 }
 public void sacarListaProcesosActivos(String ServiciosActivos)
 {
-    System.out.println("Dentro proceso");
+    //System.out.println("Dentro proceso");
   int inicio=0, fin=4;
 final JDialog panelServicios = new JDialog(this);
   JList lista = new JList();
@@ -1850,7 +2200,7 @@ DefaultListModel modelo = new DefaultListModel();
  String separador = ">#";
         String aux=null;
  int campos=NumeroDeSubdirectorios(ServiciosActivos,separador);
-    System.out.println("Numero Campos"+campos);
+    //System.out.println("Numero Campos"+campos);
 
 
  if (campos==0)
@@ -1871,19 +2221,21 @@ DefaultListModel modelo = new DefaultListModel();
 lista.setModel(modelo);  
 JScrollPane scrollPane = new JScrollPane(lista);
         JPanel panel4=new JPanel ();
-scrollPane.setPreferredSize (new Dimension(400,300));
+scrollPane.setPreferredSize (new Dimension(650, 450));
         Container container = this.getContentPane();
         panel4.setLayout(new BorderLayout(1,1));
 panel4.add(scrollPane,BorderLayout.NORTH);
 JButton boton = new JButton("  Cerrar  ");
+boton.setIcon(iconoExit);
 panel4.add(boton,BorderLayout.EAST);
+
 
  boton.addActionListener (
 
          new ActionListener () {
 
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Cerrar Ventana");
+                //System.out.println("Cerrar Ventana");
 
      try
      {
@@ -1903,18 +2255,18 @@ panel4.add(boton,BorderLayout.EAST);
          //la clase interna anónima
       ); // Finalizar llamada para addActionListener
 
-panelServicios.setModal(true);
-panelServicios.setTitle("Lista de procesos");
+//------------------------------------------panelServicios.setModal(true);
+panelServicios.setTitle("Lista de servicios activos");
 Container contentPane = panelServicios.getContentPane();
 contentPane.add(panel4, BorderLayout.CENTER);
-panelServicios.pack();
-panelServicios.setSize(new Dimension(600, 400));
-panelServicios.setLocationRelativeTo(this);
 
+panelServicios.setSize(new Dimension(600, 600));
+panelServicios.setLocationRelativeTo(this);
+panelServicios.pack();
 
 //frameCliente.setLocationRelativeTo(null)
-
-panelServicios.show();
+panelServicios.setVisible(true);
+//panelServicios.show();
  }
 }
 
@@ -1924,99 +2276,338 @@ public void mensageServicios(String ServiciosActivos){
        //Listar(ServiciosActivos);
 }
 
+
+
+    @SuppressWarnings("static-access")
 public void MostrarImagen(String Imagen){
-System.out.println("Recibiendo imagen video");
-ImageIcon img = new ImageIcon("c:/capturo.jpg");
-    final JDialog panelImagen = new JDialog(this);
-    
-    JLabel etiqueta = new JLabel(img);
-etiqueta.setIcon (new ImageIcon("c:\\capturo.jpg"));
- etiqueta.paintImmediately(0, 0,etiqueta.getSize().width, etiqueta.getSize().height);
 
-//etiqueta.seti.setImageIcon(new ImageIcon("c:\\capturo.jpg"));
+System.out.println("----[CLIENTE][MostrarImagen2] Inicio (estado="+estado+")...");
 
-    JScrollPane scrollPane = new JScrollPane(etiqueta);
-     JPanel panel5=new JPanel ();
-   //  panel5.removeAll();
+//null
+if (panelImagen  == null || entrar==1)
+
+{
+    entrar=0;
+    System.out.println("----[CLIENTE][MostrarImagen2] Creando objetos...");
+
+    panelImagen =   new JDialog(this);
+    panelImagen.setTitle("Imagen desde servidor");
+
+    etiqueta    =   new JLabel();
+    scrollPane  =   new JScrollPane(etiqueta);
+
+    iIcon1 =   new ImageIcon("c:/capturo12.jpg");
+    img1   =   iIcon1.getImage();
+    //img2   =   img1.getScaledInstance(800, 1280,  java.awt.Image.SCALE_SMOOTH);
+    img2   =   img1.getScaledInstance(500, 500,  java.awt.Image.SCALE_SMOOTH);
+    iIcon2 =   new ImageIcon(img2);
+    etiqueta.setIcon(iIcon2);
+
+
+    //etiqueta.setSize(350, 450);
+
+    // Panel 15
+    panel5      =   new JPanel();
+    panel5.setLayout(new BorderLayout(1,2));
+    //panel5.removeAll();
+    //panel5.add(etiqueta);
+    panel5.add(scrollPane);
+    //panel5.add(scrollPane,BorderLayout.NORTH);
     panel5.repaint();
 
-    JPanel panel6=new JPanel ();
-    Container container = this.getContentPane();
-    panel5.setLayout(new BorderLayout(1,2));
+    // Botonera
+    play   = new JButton();
+ final int ICON_SIZE = 32;
+    play.setIcon(iconoPlay);
+   // play.setText("Play");
+   iconoPlay.setImageObserver(play);
+     
 
-
-       panelImagen.setModal(true);
-
-panelImagen.setTitle("Pantalla remota22222333333");
-//panel5.add(etiqueta);
-panel5.add(scrollPane);
-//panel5.add(scrollPane,BorderLayout.NORTH);
- panelImagen.repaint();
-
-
-JButton play = new JButton("play");
-JButton stop = new JButton("Stop");
-JButton pause =new JButton("Pause");
-panel6.add(play,BorderLayout.SOUTH);
-panel6.add(stop,BorderLayout.SOUTH);
-panel6.add(pause,BorderLayout.WEST);
-
-
-play.addActionListener (
-
-         new ActionListener () {
-
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Actualizando imagen");
-
-                try {
-                     panelImagen.dispose();
-                     
-                     ejecutoDeComandos.recibirImagenServidor();
-    }
-    catch (NuestraExeption ex) {
-      JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
-                                    JOptionPane.CLOSED_OPTION,
-                                    JOptionPane.INFORMATION_MESSAGE);
-    }
+     psize= new JButton();
+     psize.setIcon(iconobig);
+   // play.setText("Play");
+   iconoPlay.setImageObserver(psize);
 
 
 
-     /*try
-     {
+    stop   = new JButton();
+    stop.setIcon(iconoStop);
+iconoPlay.setImageObserver(stop);
 
-        panelImagen.dispose();
-        ejecutoDeComando.ListarProcesos();
-     }
-    catch(Exception event)
+    pause  = new JButton();
+    pause.setIcon(iconoPause);
+iconoPause.setImageObserver(pause);
+
+
+
+    save   = new JButton("Save");
+
+
+    exit   = new JButton();//exit
+   exit.setIcon(iconoExit);
+iconoExit.setImageObserver(exit);
+
+
+
+
+    psize.setEnabled(true);
+    play.setEnabled(true);
+    pause.setEnabled(false);
+    stop.setEnabled(false);
+    save.setEnabled(false);
+    exit.setEnabled(true);
+    panel6 = new JPanel();
+    panel6.add(play,BorderLayout.SOUTH);
+    panel6.add(stop,BorderLayout.SOUTH);
+    panel6.add(pause,BorderLayout.WEST);
+    panel6.add(save,BorderLayout.WEST);
+    panel6.add(psize,BorderLayout.WEST);
+    panel6.add(exit,BorderLayout.WEST);
+
+        panelImagen.addWindowListener(
+                new WindowListener() {
+                     public void windowClosing(WindowEvent e) {
+                        System.out.println("----[CLIENTE][MostrarImagen2].window: cerrando");
+                        estado=0;
+                        entrar=1;
+                     }
+                     public void windowClosed(WindowEvent e) {
+                        System.out.println("Window Closed");
+                     }
+                     public void windowIconified(WindowEvent e) {
+                        System.out.println("Window Iconified");
+                     }
+                     public void windowDeiconified(WindowEvent e) {
+                        System.out.println("Window Deiconified");
+                     }
+                     public void windowOpened(WindowEvent e) {
+                        System.out.println("Window Opened");
+                     }
+                     public void windowActivated(WindowEvent e) {
+                        System.out.println("Window Activated");
+                     }
+                     public void windowDeactivated(WindowEvent e) {
+                        System.out.println("Window Deactivated");
+                     }
+
+                }
+                );
+
+        psize.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    tipo_tam=1;
+                    contarr++;
+                     if ((contarr % 2)==0)
+                         tipo_tam=0;
+                    System.out.println("----[Ampliar[IIIIIIIIIIIIIIIIIIIIIImagen2].AUMENTAR: 1");
+                    /*Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                    panelImagen.setSize(d);
+		    panelImagen.setResizable(false);
+                    panel5.setSize(d.height-40,d.width-40);
+                    panelImagen.setLocationRelativeTo(null);
+                    iIcon1 =   new ImageIcon("c:/capturo12.jpg");
+                    img1   =   iIcon1.getImage();
+*/
+               //img2   =   img1.getScaledInstance(800, 1280,  java.awt.Image.SCALE_SMOOTH);
+               //La inagen la hacemos mas grande
+               if (tipo_tam==0){ //tamaño normal
+                   System.out.println("----[Ampliar[iiiiiiiiiiiiiiiiiiiimagen2].disminuir: 0");
+                   psize.setIcon(iconobig);
+   // play.setText("Play");
+                    iconoPlay.setImageObserver(psize);
+                    panelImagen.setSize(new Dimension(500, 500));
+                   panelImagen.setResizable(false);
+                   // panel5.setSize(d.height-40,d.width-40);
+                    panelImagen.setLocationRelativeTo(null);
+                   //img2   =   img1.getScaledInstance(600, 600,  java.awt.Image.SCALE_SMOOTH);
+
+                   img2   =   img1.getScaledInstance(600, 600,  java.awt.Image.SCALE_SMOOTH);
+               }
+                   else{
+         //   Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+               psize.setIcon(iconosmall);
+   // play.setText("Play");
+               iconoPlay.setImageObserver(psize);
+                        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                    panelImagen.setSize(d);
+		    panelImagen.setResizable(false);
+                    panel5.setSize(d.height-40,d.width-40);
+                    panelImagen.setLocationRelativeTo(null);
+                    iIcon1 =   new ImageIcon("c:/capturo12.jpg");
+                    img1   =   iIcon1.getImage();
+                   img2   =   img1.getScaledInstance(d.width-40,d.height-80,  java.awt.Image.SCALE_SMOOTH);
+                 }
+               // img2   =   img1.getScaledInstance(d.width-40,d.height-80,  java.awt.Image.SCALE_SMOOTH);
+               iIcon2 =   new ImageIcon(img2);
+               etiqueta.setIcon(iIcon2);
+
+psize.repaint();
+
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+
+
+        save.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[CLIENTE][MostrarImagen2].save: 1");
+                    try {
+                        //panelImagen.dispose();
+                        ejecutoDeComandos.recibirImagenServidor(1);
+                        }
+                    catch (NuestraExeption ex) {
+                        JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion",
+                                                    JOptionPane.CLOSED_OPTION,
+                                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+        play.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[CLIENTE][MostrarImagen2].play: 1 (Me han pulsado)");
+
+                    estado=1;
+
+                    play.setEnabled(false);
+                    pause.setEnabled(true);
+                    stop.setEnabled(true);
+                    save.setEnabled(true);
+
+                   try {
+                            System.out.println("----[CLIENTE][MostrarImagen2].play: 2 (Llamando a recibirImagenServidor())");
+                          //  panelImagen.dispose();
+                            ejecutoDeComandos.recibirImagenServidor();
+                        }
+                    catch (NuestraExeption ex) {
+                        JOptionPane.showConfirmDialog(null, ex.getMessage(), "conexion", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+        pause.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[CLIENTE][MostrarImagen2].pause: 1 (Me han pulsado)");
+                    estado=0;
+
+                    play.setEnabled(true);
+                    pause.setEnabled(false);
+                    stop.setEnabled(false);
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+        stop.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[CLIENTE][MostrarImagen2].stop: 1 (Me han pulsado)");
+                    estado=0;
+                    play.setEnabled(true);
+                    pause.setEnabled(false);
+                    stop.setEnabled(false);
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+        exit.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("----[CLIENTE][MostrarImagen2].exit: 1 (Me han pulsado)");
+                    //esexittado=0;
+
+                    panelImagen.setVisible(false);
+                    entrar=1;
+                    tipo_tam=0;
+                    contarr=0;
+                    //panelImagen.dispose();
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+
+        //contentPane = new Container();
+        contentPane = panelImagen.getContentPane();
+        contentPane.add(panel5, BorderLayout.CENTER);
+        contentPane.add(panel6, BorderLayout.SOUTH);
+        contentPane.repaint();
+        panelImagen.repaint();
+        panelImagen.pack();
+        panelImagen.setLocationRelativeTo(this);
+        panelImagen.setSize(new Dimension(500, 500));
+        //panelImagen.show();
+        panelImagen.setVisible(true);
+
+        System.out.println("----[CLIENTE][MostrarImagen2] Creando objetos 6...");
+
+        estado=0;
+        System.out.println("----[CLIENTE][MostrarImagen2] Objetos creados...");
+
+}          // if (panelImagen  == null)
+
+    System.out.println("----[CLIENTE][MostrarImagen2] Bucle (estado="+estado+")...");
+    while(estado==1)
     {
-      JOptionPane.showConfirmDialog(null, "Error,no se pudo Listar procesos", "error list process",
-                                    JOptionPane.CLOSED_OPTION,
-                                    JOptionPane.INFORMATION_MESSAGE);
+            try {
+                System.out.println("----[CLIENTE][MostrarImagen2] Bucle... Llamando a recibirImagenServidor()...");
+                ejecutoDeComandos.recibirImagenServidor();
+                }
+            catch (NuestraExeption ex)
+                {
+                System.out.println("ERROR>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                Logger.getLogger(FrameCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
+    if (panelImagen != null) {
 
-              };*/
+        iIcon1 =   new ImageIcon("c:/capturo12.jpg");
+        img1   =   iIcon1.getImage();
+        //img2   =   img1.getScaledInstance(800, 1280,  java.awt.Image.SCALE_SMOOTH);
+       
+        if (tipo_tam==0){ //tamaño normal
+          panelImagen.setSize(new Dimension(500, 500));
+         img2   =   img1.getScaledInstance(600, 600,  java.awt.Image.SCALE_SMOOTH);
+        }
+         else{
+                    System.out.println("[SIZE]-------->>>>>>pintamos Imagen grande");
+                    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+                  panelImagen.setSize(d);
+                  img2   =   img1.getScaledInstance(d.width-40,d.height-80,  java.awt.Image.SCALE_SMOOTH);
 
-            }
-         } // clase interna anónima
-         //la clase interna anónima
-      ); // Finalizar llamada para addActionListener
+            //Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+            //img2   =   img1.getScaledInstance(d.width-40,d.height-40,  java.awt.Image.SCALE_SMOOTH);
+        }
+        iIcon2 =   new ImageIcon(img2);
+        etiqueta.setIcon(iIcon2);
+
+        etiqueta.repaint();
+       // panel5.repaint();
+       // panelImagen.repaint();
+    }
 
 
+//    try {
+//          System.out.println("----[CLIENTE][MostrarImagen2] Bucle... SLEEPING...");
+//                Thread.sleep(3000); //Tarea que consume diez segundos.
+//        }
+//        catch (InterruptedException ex)
+//            {
+//            Logger.getLogger(FrameCliente.class.getName()).log(Level.SEVERE, null, ex);
+//            }
 
-
-
-
-
-Container contentPane = panelImagen.getContentPane();
-contentPane.add(panel5, BorderLayout.CENTER);
-contentPane.add(panel6, BorderLayout.SOUTH);
-panelImagen.pack();
-panelImagen.setSize(new Dimension(500, 500));
-panelImagen.show();
-
-
+        System.out.println("----[CLIENTE][MostrarImagen2] Bucle... Fin");
+    }
+    
+System.out.println("----[CLIENTE][MostrarImagen2] Fin.");
 
 }
+
 
 
 //recibe imagen
@@ -2024,11 +2615,126 @@ public void mensageVideo(String NombreCaptura){
     MostrarImagen(NombreCaptura);
 }
 
+    public void clearShell2() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void mensageInformacionEquipo(String informacionEquipo) {
+        //throw new UnsupportedOperationException("Not supported yet.");
+       panelInformacion=new JDialog(this);
+       panelInformacion.getContentPane().setLayout (new GridBagLayout());
+        Container contentPane = panelInformacion.getContentPane();
+        System.out.println("Dispuesto a mostrar ------------------>>>[Infortion compter]");
+       JPanel panelInfor=new JPanel();
+       GridBagConstraints constraints = new GridBagConstraints();
+       JPanel panelInfoArea=new JPanel();
+
+       JPanel ZonaButton=new JPanel();
+       JLabel etiqueta2=new JLabel ();
+
+       JButton sal=new JButton();
+//clear.addActionListener(new FrameCliente_ListaProcess_actionAdapter(this));
+     sal.setIcon(iconoExit);
+       constraints.gridx = 3;
+    constraints.gridy = 3;
+    constraints.gridwidth = 1;
+    constraints.gridheight = 1;constraints.anchor = GridBagConstraints.SOUTHEAST;
+//constraints.weighty = 0.0;
+constraints.weightx = 0.0;
+constraints.weighty = 0.0;
+constraints.fill = GridBagConstraints.NONE;
+panelInformacion.getContentPane().add (sal, constraints);
+constraints.weighty = 0.0; // Restauramos el valor por defecto.
+       //sal.setPreferredSize(new Dimension(5,5));
+      
+   //----------->>>>>>>    ZonaButton.add(sal);
+       etiqueta2.setIcon(iconoinformacion);
+       JScrollPane jScrollPan = new JScrollPane();
+       JTextArea area=new JTextArea (informacionEquipo);
+       area.setEditable(false);
+       
+
+       //panelInfoArea.add(jScrollPan);
+
+       
+       
+       constraints.gridx = 0; // El área de texto empieza en la columna cero.
+       constraints.gridy = 0; // El área de texto empieza en la fila cero
+      constraints.gridwidth = 2; // El área de texto ocupa dos columnas.
+      constraints.gridheight = 2; // El área de texto ocupa 2 filas.
+     
+     // this.getContentPane().add (p);
+    //  constraints.fill = GridBagConstraints.EAST;
+constraints.weightx = 0.0;
+constraints.weighty = 0.0;
+constraints.fill = GridBagConstraints.CENTER;
+//gbc.fill = GridBagConstraints.NONE;
+//constraints.gridwidth = GridBagConstraints.RELATIVE;
+jScrollPan.getViewport().add(area,constraints);
+     panelInformacion.getContentPane().add (jScrollPan,constraints);
+      //panelInformacion.getContentPane().add (jScrollPan);
+       //panelInfoArea.add(stop);
+
+constraints.weighty = 0.0; // Restauramos el valor por defecto.
+       panelInformacion.setTitle("Informacion del equipo");
+       //.setLayout (new GridBagLayout());
+      
+
+
+
+
+       //------------------>>>>>panelInfor.add(etiqueta);
+
+       constraints.gridx = 3;
+constraints.gridy = 0;
+constraints.gridwidth = 1;
+constraints.gridheight = 1;
+//constraints.fill = GridBagConstraints.WEST;
+constraints.weightx = 0.0;
+constraints.weighty = 0.0;
+constraints.fill = GridBagConstraints.WEST;
+//constraints.gridwidth = GridBagConstraints.RELATIVE;
+panelInformacion.getContentPane().add (etiqueta2, constraints);
+constraints.weighty = 0.0; // Restauramos el valor por defecto.
+/* ESTTTTTT------------------------------->>>>>>>>>>>>>*/
+      //contentPane.add(panelInfor, BorderLayout.CENTER);
+  //    contentPane.add(panelInfor, BorderLayout.SOUTH);
+  //    contentPane.add(panelInfoArea, BorderLayout.WEST);
+  //    contentPane.add(ZonaButton,BorderLayout.EAST);
+
+
+
+panelInformacion.setSize(new Dimension(700, 700));
+       panelInformacion.setLocationRelativeTo(this);
+       panelInformacion.pack();
+
+//frameCliente.setLocationRelativeTo(null)
+       panelInformacion.setVisible(true);
+
+
+       sal.addActionListener (
+            new ActionListener () {
+                public void actionPerformed(ActionEvent e) {
+
+                //    System.out.println("LIMPIO ");
+                panelInformacion.dispose();
+                    //adaptee.conectarRadioButton_actionPerformed(e);
+
+                }
+            } // clase interna anónima
+        ); // Finalizar llamada para addActionListener
+
+
+
+
+
+
+    }
+
+
 
 
 }
-
-
 
 
 class FrameCliente_conectarRadioButton_actionAdapter implements java.awt.event.
